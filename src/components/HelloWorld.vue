@@ -1,34 +1,30 @@
 <script setup lang="ts">
-  import { ref } from 'vue';
+  import { ref, onMounted } from 'vue';
+  import axios from 'axios';
+  import { Pokemon } from "@/interfaces/Pokemon"
 
-  defineProps<{ msg: string }>();
+  const pokemons = ref<Pokemon[]>();
 
-  const count = ref(0);
+  const api = axios.create({
+    baseURL: 'https://pokeapi.co/api/v2',
+  });
+
+  const fetchPokemon = () => {
+    api.get('/pokemon?limit=151').then((response) => {
+      pokemons.value = response.data.results;
+    });
+  };
+
+  console.log(pokemons.value);
+
+  onMounted(fetchPokemon);
 </script>
 
 <template>
   <h1>{{ $t('greetings') }}</h1>
-
-  <div class="card">
-    <button type="button" @click="count++">count is {{ count }}</button>
-    <p>
-      Edit
-      <code>components/HelloWorld.vue</code> to test HMR
-    </p>
+  <div v-for="pokemon in pokemons" :key="pokemon.name">
+    {{ pokemon.name }}
   </div>
-
-  <p>
-    Check out
-    <a href="https://vuejs.org/guide/quick-start.html#local" target="_blank"
-      >create-vue</a
-    >, the official Vue + Vite starter
-  </p>
-  <p>
-    Install
-    <a href="https://github.com/johnsoncodehk/volar" target="_blank">Volar</a>
-    in your IDE for a better DX
-  </p>
-  <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
 </template>
 
 <style scoped lang="stylus">
