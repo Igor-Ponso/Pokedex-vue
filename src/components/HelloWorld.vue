@@ -3,7 +3,10 @@
   import axios from 'axios';
   import { Pokemon } from "@/interfaces/Pokemon"
 
-  const pokemons = ref<Pokemon[]>();
+  const pokemons = ref([] as Pokemon[]);
+  //const pokemons = ref<Pokemon[]>([]); // * Other way for the same thing
+
+
 
   const api = axios.create({
     baseURL: 'https://pokeapi.co/api/v2',
@@ -15,13 +18,12 @@
     });
   };
 
-  console.log(pokemons.value);
-
   onMounted(fetchPokemon);
 </script>
 
 <template>
   <h1>{{ $t('greetings') }}</h1>
+
   <div v-for="pokemon in pokemons" :key="pokemon.name">
     {{ pokemon.name }}
   </div>
