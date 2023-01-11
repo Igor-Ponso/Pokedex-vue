@@ -30,6 +30,7 @@
       <Cards :pokemon="pokemon" />
     </template>
   </div>
+  <img src="../public/svgs/pokemons/4.svg" alt="">
 </template>
 
 <style lang="stylus" scoped>
