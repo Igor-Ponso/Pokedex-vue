@@ -43,7 +43,10 @@
           v-for="item in props.pokemon.types"
           :key="item.type.url"
           class="card-type"
-          :style="{ background: `var(--color-type-${item.type.name})` }"
+          :style="{
+            background: `var(--color-type-${item.type.name})`,
+            boxShadow: `0 0 20px var(--color-type-${item.type.name})`,
+          }"
         >
           <img
             :src="pokemonTypePath(item.type.name)"
