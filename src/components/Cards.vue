@@ -6,11 +6,11 @@
   }>();
 
   const pokemonGifPath = (id: number) => {
-    return `/pokedex-vue/src/assets/svgs/pokemons/${id}.svg`;
+    return `/PokeApi-vue/src/assets/svgs/pokemons/${id}.svg`;
   };
 
   const pokemonTypePath = (type_name: string) => {
-    return `/pokedex-vue/src/assets/svgs/type/${type_name}.svg`;
+    return `/PokeApi-vue/src/assets/svgs/type/${type_name}.svg`;
   };
 
   const checkTypes = (types: number) => {
