@@ -20,6 +20,11 @@
       });
     }
   };
+
+  const imageUrl = {
+    path: '../src/assets/svgs/pokemons/4.svg',
+  };
+
   onMounted(fetchPokemon);
 </script>
 
@@ -30,7 +35,8 @@
       <Cards :pokemon="pokemon" />
     </template>
   </div>
-  <img src="../public/svgs/pokemons/4.svg" alt="">
+  <img :src="imageUrl.path" alt="" />
+  oi
 </template>
 
 <style lang="stylus" scoped>

@@ -5,12 +5,13 @@
     pokemon: Pokemon;
   }>();
 
-  const pokemonGifPath = (id: number) => {
-    return `/PokeApi-vue/public/svgs/pokemons/${id}.svg`;
+  const paths = {
+    image: `../src/assets/svgs/pokemons/${props.pokemon.id}.svg`,
+    types: `../src/assets/type/${props.pokemon}.svg`,
   };
 
   const pokemonTypePath = (type_name: string) => {
-    return `/PokeApi-vue/public/svgs/type/${type_name}.svg`;
+    return `../src/assets/svgs/type/${type_name}.svg`;
   };
 
   const checkTypes = (types: number) => {
@@ -34,7 +35,7 @@
       <span>{{ props.pokemon.id }}</span>
       <button>Shiny</button>
     </div>
-    <img :src="pokemonGifPath(pokemon.id)" alt="" class="card-image" />
+    <img :src="paths.image" alt="" class="card-image" />
 
     <div class="pokemon_data">
       {{ pokemon.name }}
