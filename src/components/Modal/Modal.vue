@@ -6,9 +6,9 @@
    * @version 1.0.0
    */
   import { Pokemon } from '@/interfaces/Pokemon';
-  import { ref } from 'vue';
+  import { useModalStore } from '@/stores/Modal'
 
-  const isOpen = ref(false);
+  const isOpen = useModalStore().isOpen;
   const props = defineProps<{
     pokemon: Pokemon;
   }>();
@@ -16,7 +16,6 @@
 
 <template>
   <div class="root">
-    <button @click="isOpen = true">Open</button>
     <teleport to="body">
       <div class="modal" v-if="isOpen">
         <div>
