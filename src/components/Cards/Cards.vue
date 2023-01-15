@@ -1,4 +1,10 @@
 <script setup lang="ts">
+  /**
+   * Component template for Cards.
+   * @name 'Cards'
+   * @see App
+   * @version 1.0.0
+   */
   import { Pokemon } from '@/interfaces/Pokemon';
 
   const props = defineProps<{
@@ -27,13 +33,16 @@
       };
     }
   };
+
+  const padWithLeadingZeros = (num: number, totalLength: number) => {
+    return String(num).padStart(totalLength, '0');
+  }
 </script>
 
 <template>
   <div class="card" :style="checkTypes(props.pokemon.types.length)">
     <div class="card-header">
-      <span>{{ props.pokemon.id }}</span>
-      <button>Shiny</button>
+      <span>{{ padWithLeadingZeros(props.pokemon.id, 3) }}</span>
     </div>
     <img :src="paths.image" alt="" class="card-image" />
 
@@ -77,13 +86,12 @@
     justify-content space-between
 
   .card-image
-    height: 150px;
+    height: 9.375rem;
 
   .card-type
-    width: 40px;
-    height: 40px;
+    width: 2.5rem;
+    height: 2.5rem;
     border-radius: 100%;
-    background red
     display: -webkit-flex;
     display: flex;
     -webkit-justify-content: center;
