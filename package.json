@@ -22,7 +22,8 @@
     "pinia": "^2.0.28",
     "stylus": "^0.59.0",
     "vue": "^3.2.45",
-    "vue-i18n": "9"
+    "vue-i18n": "9",
+    "vue-toastification": "^2.0.0-rc.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
