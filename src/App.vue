@@ -30,6 +30,7 @@
       <Modal></Modal>
     </Teleport>
   </div>
+  <img src="./assets/svgs/pokemons/1.svg" alt="" class="card-type-item" />
 </template>
 
 <style lang="stylus" scoped>

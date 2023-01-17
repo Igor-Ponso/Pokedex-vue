@@ -12,7 +12,7 @@
   }>();
 
   const paths = {
-    image: `../src/assets/svgs/pokemons/${props.pokemon.id}.svg`,
+    image: `/PokeApi-vue/src/assets/svgs/pokemons/${props.pokemon.id}.svg`,
     types: `../src/assets/type/${props.pokemon}.svg`,
   };
 
