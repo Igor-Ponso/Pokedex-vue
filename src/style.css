@@ -7,7 +7,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #1a1a1a;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -62,6 +62,10 @@ button:focus-visible {
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  background-image: url(./assets/images/background.jfif);
+  background-size: auto;
+  background-repeat: repeat;
+  background-position: center;
 }
 
 @media (prefers-color-scheme: light) {

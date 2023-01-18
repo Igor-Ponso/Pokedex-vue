@@ -12,12 +12,21 @@
   }>();
 
   const paths = {
-    image: `/PokeApi-vue/src/assets/svgs/pokemons/${props.pokemon.id}.svg`,
-    types: `../src/assets/type/${props.pokemon}.svg`,
+    image: new URL(
+      `/src/assets/svgs/pokemons/${props.pokemon.id}.svg`,
+      import.meta.url,
+    ).href,
+    types: `../../assets/svgs`,
+  };
+
+  const pokemonImagePath = (type_name: string) => {
+    return new URL(`/src/assets/svgs/type/${type_name}.svg`, import.meta.url)
+      .href;
   };
 
   const pokemonTypePath = (type_name: string) => {
-    return `../src/assets/svgs/type/${type_name}.svg`;
+    return new URL(`/src/assets/svgs/type/${type_name}.svg`, import.meta.url)
+      .href;
   };
 
   const checkTypes = (types: number) => {
@@ -36,7 +45,7 @@
 
   const padWithLeadingZeros = (num: number, totalLength: number) => {
     return String(num).padStart(totalLength, '0');
-  }
+  };
 </script>
 
 <template>
@@ -81,6 +90,10 @@
     justify-content space-between;
     color #252a41
     text-transform: capitalize;
+    cursor pointer
+    transition all .25s ease
+    &:hover
+      transform scale(1.1)
   .card-header
     display flex
     justify-content space-between
