@@ -1,6 +1,9 @@
 import { usePokemonStore } from '@/stores/Pokemon';
 import { api } from '@/api/config';
 import { useToast } from 'vue-toastification';
+import { storeToRefs } from 'pinia';
+const pokemonStore = usePokemonStore();
+const { pokemonEntries } = storeToRefs(pokemonStore);
 
 export const fetchPokemonsData = async () => {
   try {
