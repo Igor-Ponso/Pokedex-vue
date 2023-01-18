@@ -10,17 +10,9 @@
   const props = defineProps<{
     pokemon: Pokemon;
   }>();
-
-  const paths = {
-    image: new URL(
-      `/src/assets/svgs/pokemons/${props.pokemon.id}.svg`,
-      import.meta.url,
-    ).href,
-    types: `../../assets/svgs`,
-  };
-
-  const pokemonImagePath = (type_name: string) => {
-    return new URL(`/src/assets/svgs/type/${type_name}.svg`, import.meta.url)
+  
+  const pokemonImagePath = () => {
+    return new URL(`/src/assets/svgs/pokemons/${props.pokemon.id}.svg`, import.meta.url)
       .href;
   };
 
@@ -53,7 +45,7 @@
     <div class="card-header">
       <span>{{ padWithLeadingZeros(props.pokemon.id, 3) }}</span>
     </div>
-    <img :src="paths.image" alt="" class="card-image" />
+    <img :src="pokemonImagePath()" alt="" class="card-image" />
 
     <div class="pokemon_data">
       {{ pokemon.name }}
