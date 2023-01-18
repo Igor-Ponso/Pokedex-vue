@@ -8,14 +8,18 @@
 
   import { ref } from 'vue';
   import { useModalStore } from '@/stores/Modal';
+  import { usePokemonStore } from '@/stores/Pokemon';
   import { storeToRefs } from 'pinia';
   import { onClickOutside } from '@vueuse/core';
 
   const modalStore = useModalStore();
+  const pokemonStore = usePokemonStore();
   const { isOpen, pokemonData } = storeToRefs(modalStore);
+  const { pokemonEntries } = storeToRefs(pokemonStore);
   const modal = ref(null);
 
   onClickOutside(modal, () => (isOpen.value = false));
+ 
 </script>
 
 <template>
@@ -24,6 +28,9 @@
       <div class="modal" ref="modal">
         <button @click="isOpen = false" class="close-btn">X</button>
         <p>{{ pokemonData.name }}</p>
+        <img :src="pokemonData.sprites.other.home.front_shiny" alt="" />
+        <img :src="pokemonData.sprites.front_default" />
+        <img :src="pokemonData.sprites.front_shiny" />
       </div>
     </div>
   </Transition>

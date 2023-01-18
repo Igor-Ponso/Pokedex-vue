@@ -11,11 +11,6 @@
     pokemon: Pokemon;
   }>();
   
-  const pokemonImagePath = () => {
-    return new URL(`/src/assets/svgs/pokemons/${props.pokemon.id}.svg`, import.meta.url)
-      .href;
-  };
-
   const pokemonTypePath = (type_name: string) => {
     return new URL(`/src/assets/svgs/type/${type_name}.svg`, import.meta.url)
       .href;
@@ -45,8 +40,7 @@
     <div class="card-header">
       <span>{{ padWithLeadingZeros(props.pokemon.id, 3) }}</span>
     </div>
-    <img :src="pokemonImagePath()" alt="" class="card-image" />
-
+    <img :src="props.pokemon.sprites.other['official-artwork'].front_default" alt="" class="card-image" />
     <div class="pokemon_data">
       {{ pokemon.name }}
       <div class="pokemon_type">
