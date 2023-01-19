@@ -6,31 +6,49 @@
    * @version 1.0.0
    */
 
-  import { ref } from 'vue';
+  import { ref, reactive } from 'vue';
   import { useModalStore } from '@/stores/Modal';
   import { usePokemonStore } from '@/stores/Pokemon';
   import { storeToRefs } from 'pinia';
   import { onClickOutside } from '@vueuse/core';
 
   const modalStore = useModalStore();
+  const { isOpen, pokemonData, pokemonId } = storeToRefs(modalStore);
   const pokemonStore = usePokemonStore();
-  const { isOpen, pokemonData } = storeToRefs(modalStore);
   const { pokemonEntries } = storeToRefs(pokemonStore);
+
   const modal = ref(null);
 
+  const padWithLeadingZeros = (num: number, totalLength: number) => {
+    return String(num).padStart(totalLength, '0');
+  };
+
   onClickOutside(modal, () => (isOpen.value = false));
- 
 </script>
 
 <template>
   <Transition name="modal">
     <div class="modal-bg" v-if="isOpen">
-      <div class="modal" ref="modal">
+      <div
+        class="modal"
+        ref="modal"
+        :style="{
+          background: `linear-gradient(var(--color-${pokemonData.types[0].type.name}), var(--color-type-${pokemonData.types[0].type.name}))`,
+        }"
+      >
         <button @click="isOpen = false" class="close-btn">X</button>
-        <p>{{ pokemonData.name }}</p>
-        <img :src="pokemonData.sprites.other.home.front_shiny" alt="" />
-        <img :src="pokemonData.sprites.front_default" />
-        <img :src="pokemonData.sprites.front_shiny" />
+        <span>#{{ padWithLeadingZeros(pokemonData.id, 3) }}</span>
+        <!-- <p>{{ pokemonData.name }}</p>
+        <p>{{ pokemonData.base_experience }}</p>
+        <p>{{ pokemonData.weight}}</p>
+        <p>{{ pokemonData.height }}</p>
+        <p>{{ pokemonData.stats }}</p>
+        <p>{{ pokemonData.types }}</p> -->
+        <img :src="pokemonData.sprites.other['official-artwork'].front_default" alt="" />
+        <!-- <img :src="pokemonData.sprites.other.home.front_shiny" alt="" />
+        <p>
+          {{ pokemonEntries[pokemonId].flavor_text_entries[10].flavor_text }}
+        </p> -->
       </div>
     </div>
   </Transition>
@@ -49,6 +67,8 @@
     align-items center
 
   .modal
+    height 60%
+    width 70%
     position relative
     background white
     color black

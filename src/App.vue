@@ -10,7 +10,7 @@
   const pokemonsData = usePokemonStore().pokemonList;
 
   const modalStore = useModalStore();
-  const { isOpen, pokemonData } = storeToRefs(modalStore);
+  const { isOpen, pokemonData, pokemonId } = storeToRefs(modalStore);
   onMounted(fetchPokemonsData);
 </script>
 
@@ -23,6 +23,7 @@
         @click="
           isOpen = true;
           pokemonData = pokemon;
+          pokemonId = pokemon.id;
         "
       />
     </template>

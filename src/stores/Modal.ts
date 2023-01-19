@@ -5,6 +5,7 @@ import { defineStore } from 'pinia';
 export const useModalStore = defineStore('modal', () => {
   const isOpen = ref(false);
   const pokemonData = ref({} as Pokemon);
+  const pokemonId = ref<number>(0);
 
-  return { isOpen, pokemonData };
+  return { isOpen, pokemonData, pokemonId };
 });
