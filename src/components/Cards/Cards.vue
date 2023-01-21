@@ -7,9 +7,9 @@
    * @see App
    * @version 1.0.0
    */
+  import { ref, computed } from 'vue';
   import { Pokemon } from '@/interfaces/Pokemon';
-  import { ref } from 'vue';
-
+  
   const props = defineProps<{
     pokemon: Pokemon;
   }>();
@@ -19,7 +19,7 @@
       .href;
   };
 
-  const checkTypes = (types: number) => {
+  const checkTypes = (types: number) => { 
     if (types === 2) {
       return {
         background: `linear-gradient(var(--color-${props.pokemon.types[0].type.name}), 
@@ -37,12 +37,17 @@
     return String(num).padStart(totalLength, '0');
   };
 
-  const shinyUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/'
+  const shinyUrl =
+    'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/';
   const shinyForm = ref(false);
 </script>
 
 <template>
-  <div class="card" :style="checkTypes(props.pokemon.types.length)">
+  <div
+    class="card"
+    ref="cardTarget"
+    :style="checkTypes(props.pokemon.types.length)"
+  >
     <div class="card-header">
       <span>{{ padWithLeadingZeros(props.pokemon.id, 3) }}</span>
       <v-icon
@@ -104,9 +109,11 @@
     -webkit-user-select: none;
     -ms-user-select: none;
     cursor pointer
-    transition all .25s ease
+    transition: all 0.3s ease-out
+
     &:hover
       transform scale(1.1)
+   
   .card-header
     display flex
     justify-content space-between

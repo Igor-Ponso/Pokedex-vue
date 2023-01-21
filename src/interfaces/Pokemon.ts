@@ -129,7 +129,6 @@ export interface Home {
 
 export interface OfficialArtwork {
   front_default: string;
-  shiny_front_default: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/';
 }
 
 export interface Versions {

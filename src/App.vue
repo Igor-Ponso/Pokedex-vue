@@ -1,11 +1,14 @@
 <script setup lang="ts">
-  import { onMounted } from 'vue';
+  import { ref, onMounted, computed } from 'vue';
   import Cards from '@/components/Cards/Cards.vue';
   import Modal from './components/Modal/Modal.vue';
   import { usePokemonStore } from '@/stores/Pokemon';
   import { fetchPokemonsData } from './services/fetchPokemons';
   import { useModalStore } from '@/stores/Modal';
   import { storeToRefs } from 'pinia';
+
+  //TODO: implement virtualList with Infinite Scrolling
+  //import { useVirtualList } from '@vueuse/core';
 
   const pokemonsData = usePokemonStore().pokemonList;
 
@@ -27,6 +30,7 @@
         "
       />
     </template>
+
     <Teleport to="#modal">
       <Modal></Modal>
     </Teleport>
