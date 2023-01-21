@@ -6,7 +6,7 @@
    * @version 1.0.0
    */
 
-  import { ref, reactive } from 'vue';
+  import { ref } from 'vue';
   import { useModalStore } from '@/stores/Modal';
   import { usePokemonStore } from '@/stores/Pokemon';
   import { storeToRefs } from 'pinia';
@@ -38,17 +38,36 @@
       >
         <button @click="isOpen = false" class="close-btn">X</button>
         <span>#{{ padWithLeadingZeros(pokemonData.id, 3) }}</span>
-        <!-- <p>{{ pokemonData.name }}</p>
-        <p>{{ pokemonData.base_experience }}</p>
-        <p>{{ pokemonData.weight}}</p>
-        <p>{{ pokemonData.height }}</p>
-        <p>{{ pokemonData.stats }}</p>
-        <p>{{ pokemonData.types }}</p> -->
-        <img :src="pokemonData.sprites.other['official-artwork'].front_default" alt="" />
-        <!-- <img :src="pokemonData.sprites.other.home.front_shiny" alt="" />
+        <p>{{ pokemonData.name }}</p>
+        <p>{{ $t('pokemon.weight') }} {{ pokemonData.weight / 10 }}KG</p>
+        <p>{{ $t('pokemon.height') }} {{ pokemonData.height / 10 }}M</p>
+        <div>
+          {{ $t('pokemon.abilities') }}
+          <span>
+            <template
+              v-for="(ability, index) in pokemonData.abilities"
+              :key="ability.ability.name"
+            >
+              {{ ability.ability.name }}
+            </template>
+          </span>
+        </div>
+        <div>
+          STATS
+          <p v-for="(stat, index) in pokemonData.stats" :key="stat.stat.name">
+            {{ stat.stat.name.toUpperCase() }} {{ stat.base_stat }}
+          </p>
+        </div>
+
+        <!-- <p>{{ pokemonData.types }}</p> -->
+        <!-- <img
+          :src="pokemonData.sprites.other['official-artwork'].front_default"
+          alt=""
+        /> -->
+        <!-- <img :src="pokemonData.sprites.other.home.front_shiny" alt="" /> -->
         <p>
-          {{ pokemonEntries[pokemonId].flavor_text_entries[10].flavor_text }}
-        </p> -->
+          {{ pokemonEntries[pokemonId - 1].flavor_text_entries[9].flavor_text }}
+        </p>
       </div>
     </div>
   </Transition>
@@ -67,20 +86,23 @@
     align-items center
 
   .modal
-    height 60%
-    width 70%
+    height 70%
+    width 90%
     position relative
-    background white
-    color black
-    padding 50px 100px
-    border-radius 5px
+    color var(--color-white-default)
+    text-shadow: 5px 3px 9px rgba(0,0,0,0.5);
+    padding 2rem
+    border-radius 10px
     box-shadow 0px 10px 5px 2px rgba(0,0,0,.1)
    .close-btn
     position absolute
     top 10px
     right 10px
-    color black
-    background none
+    width 2rem
+    height 2rem
+    font-size 1rem
+    border-radius 50%
+    background var(--color-white-2);
     border none
     cursor pointer
 

@@ -1,3 +1,8 @@
 {
-  "greetings": "Pokédex"
+  "greetings": "Pokédex",
+  "pokemon": {
+    "weight": "weight",
+    "height": "height",
+    "abilities": "abilities"
+  }
 }
