@@ -38,35 +38,50 @@
       >
         <button @click="isOpen = false" class="close-btn">X</button>
         <span>#{{ padWithLeadingZeros(pokemonData.id, 3) }}</span>
-        <p>{{ pokemonData.name }}</p>
-        <p>{{ $t('pokemon.weight') }} {{ pokemonData.weight / 10 }}KG</p>
-        <p>{{ $t('pokemon.height') }} {{ pokemonData.height / 10 }}M</p>
-        <div>
-          {{ $t('pokemon.abilities') }}
-          <span>
-            <template
-              v-for="(ability, index) in pokemonData.abilities"
-              :key="ability.ability.name"
-            >
-              {{ ability.ability.name }}
-            </template>
-          </span>
-        </div>
-        <div>
-          STATS
-          <p v-for="(stat, index) in pokemonData.stats" :key="stat.stat.name">
-            {{ stat.stat.name.toUpperCase() }} {{ stat.base_stat }}
-          </p>
+        <div class="pokemon_info">
+          <div>
+            <div>
+              <p>{{ pokemonData.name }}</p>
+              <!-- <p>{{ pokemonData.types }}</p> -->
+              <p>{{ $t('pokemon.weight') }} {{ pokemonData.weight / 10 }}KG</p>
+              <p>{{ $t('pokemon.height') }} {{ pokemonData.height / 10 }}M</p>
+            </div>
+            <div>
+              {{ $t('pokemon.abilities') }}
+              <span>
+                <template
+                  v-for="(ability, index) in pokemonData.abilities"
+                  :key="ability.ability.name"
+                >
+                  {{ ability.ability.name }}
+                </template>
+              </span>
+            </div>
+            <div>
+              <span>{{$t('pokemon.stats')}}</span>
+              <div>
+                <p
+                  v-for="(stat, index) in pokemonData.stats"
+                  :key="stat.stat.name"
+                >
+                  {{ stat.stat.name.toUpperCase() }} {{ stat.base_stat }}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <img
+              :src="pokemonData.sprites.other['official-artwork'].front_default"
+              alt=""
+              class="pokemon_image"
+            />
+          </div>
         </div>
 
-        <!-- <p>{{ pokemonData.types }}</p> -->
-        <!-- <img
-          :src="pokemonData.sprites.other['official-artwork'].front_default"
-          alt=""
-        /> -->
         <!-- <img :src="pokemonData.sprites.other.home.front_shiny" alt="" /> -->
         <p>
           {{ pokemonEntries[pokemonId - 1].flavor_text_entries[9].flavor_text }}
+          <!-- {{ pokemonEntries[pokemonId - 1].evolution_chain }} -->
         </p>
       </div>
     </div>
@@ -88,6 +103,8 @@
   .modal
     height 70%
     width 90%
+    max-width 75rem
+    max-height 56.25rem
     position relative
     color var(--color-white-default)
     text-shadow: 5px 3px 9px rgba(0,0,0,0.5);
@@ -114,4 +131,12 @@
   .modal-leave-to
     opacity 0
     transform scale(1.1)
+
+  .pokemon_info
+    display flex
+    justify-content: space-around
+    align-items center
+  .pokemon_image
+    width: 100%;
+    height: auto;
 </style>

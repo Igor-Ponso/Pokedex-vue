@@ -3,6 +3,7 @@
   "pokemon": {
     "weight": "Peso",
     "height": "Altura",
-    "abilities": "abilities"
+    "abilities": "Habilidades",
+    "stats": "Estatísticas"
   }
 }
