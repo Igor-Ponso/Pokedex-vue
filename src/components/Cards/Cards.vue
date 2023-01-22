@@ -101,13 +101,13 @@
     padding 1rem
     display flex
     flex-direction column
-    justify-content space-between;
-    color #252a41
-    text-transform: capitalize;
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
+    justify-content space-between
+    color var(--color-text-black)
+    text-transform: capitalize
+    user-select: none
+    -moz-user-select: none
+    -webkit-user-select: none
+    -ms-user-select: none
     cursor pointer
     transition: all 0.3s ease-out
 
@@ -119,25 +119,24 @@
     justify-content space-between
 
   .card-image
-    height: 9.375rem;
+    height: 9.375rem
 
   .card-type,
   .shiny-btn
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-justify-content: center;
-    justify-content: center;
-    -webkit-align-content: center;
-    align-content: center;
-    -webkit-align-items: center;
-    align-items: center;
-
+    width: 2.5rem
+    height: 2.5rem
+    border-radius: 50%
+    display: -webkit-flex
+    display: flex
+    -webkit-justify-content: center
+    justify-content: center
+    -webkit-align-content: center
+    align-content: center
+    -webkit-align-items: center
+    align-items: center
   .card-type-item
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1.25rem
+    height: 1.25rem
 
   .shiny-btn
     width 1.5rem
@@ -147,14 +146,14 @@
   .pokemon_data
     display flex
     flex-direction column
-    justify-content space-evenly;
-    gap: 1.25rem;
+    justify-content space-evenly
+    gap: .5rem
 
   .pokemon_type
     display flex
-    grid-gap: 0 10px;
-    grid-gap: 0 20px;
-    gap: 0 20px;
-    -webkit-justify-content: center;
-    justify-content: center;
+    grid-gap: 0 10px
+    grid-gap: 0 20px
+    gap: 0 20px
+    -webkit-justify-content: center
+    justify-content: center
 </style>

@@ -11,6 +11,7 @@
   import { usePokemonStore } from '@/stores/Pokemon';
   import { storeToRefs } from 'pinia';
   import { onClickOutside } from '@vueuse/core';
+  import PokemonInfo from './PokemonInfo.vue';
 
   const modalStore = useModalStore();
   const { isOpen, pokemonData, pokemonId } = storeToRefs(modalStore);
@@ -18,10 +19,6 @@
   const { pokemonEntries } = storeToRefs(pokemonStore);
 
   const modal = ref(null);
-
-  const padWithLeadingZeros = (num: number, totalLength: number) => {
-    return String(num).padStart(totalLength, '0');
-  };
 
   onClickOutside(modal, () => (isOpen.value = false));
 </script>
@@ -37,52 +34,10 @@
         }"
       >
         <button @click="isOpen = false" class="close-btn">X</button>
-        <span>#{{ padWithLeadingZeros(pokemonData.id, 3) }}</span>
-        <div class="pokemon_info">
-          <div>
-            <div>
-              <p>{{ pokemonData.name }}</p>
-              <!-- <p>{{ pokemonData.types }}</p> -->
-              <p>{{ $t('pokemon.weight') }} {{ pokemonData.weight / 10 }}KG</p>
-              <p>{{ $t('pokemon.height') }} {{ pokemonData.height / 10 }}M</p>
-            </div>
-            <div>
-              {{ $t('pokemon.abilities') }}
-              <span>
-                <template
-                  v-for="(ability, index) in pokemonData.abilities"
-                  :key="ability.ability.name"
-                >
-                  {{ ability.ability.name }}
-                </template>
-              </span>
-            </div>
-            <div>
-              <span>{{$t('pokemon.stats')}}</span>
-              <div>
-                <p
-                  v-for="(stat, index) in pokemonData.stats"
-                  :key="stat.stat.name"
-                >
-                  {{ stat.stat.name.toUpperCase() }} {{ stat.base_stat }}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div>
-            <img
-              :src="pokemonData.sprites.other['official-artwork'].front_default"
-              alt=""
-              class="pokemon_image"
-            />
-          </div>
-        </div>
-
-        <!-- <img :src="pokemonData.sprites.other.home.front_shiny" alt="" /> -->
-        <p>
-          {{ pokemonEntries[pokemonId - 1].flavor_text_entries[9].flavor_text }}
-          <!-- {{ pokemonEntries[pokemonId - 1].evolution_chain }} -->
-        </p>
+        <PokemonInfo
+          :pokemon-data="pokemonData"
+          :pokemon-entries="pokemonEntries[pokemonId - 1]"
+        />
       </div>
     </div>
   </Transition>
@@ -103,11 +58,11 @@
   .modal
     height 70%
     width 90%
-    max-width 75rem
-    max-height 56.25rem
+    max-width 1200px
+    max-height 700px
     position relative
     color var(--color-white-default)
-    text-shadow: 5px 3px 9px rgba(0,0,0,0.5);
+    text-shadow: 5px 3px 9px rgba(0,0,0,0.5)
     padding 2rem
     border-radius 10px
     box-shadow 0px 10px 5px 2px rgba(0,0,0,.1)
@@ -119,7 +74,7 @@
     height 2rem
     font-size 1rem
     border-radius 50%
-    background var(--color-white-2);
+    background var(--color-white-2)
     border none
     cursor pointer
 
@@ -131,12 +86,4 @@
   .modal-leave-to
     opacity 0
     transform scale(1.1)
-
-  .pokemon_info
-    display flex
-    justify-content: space-around
-    align-items center
-  .pokemon_image
-    width: 100%;
-    height: auto;
 </style>
