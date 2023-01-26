@@ -2,14 +2,14 @@
   import { Pokemon } from '@/interfaces/Pokemon';
   import { PokemonEntries } from '@/interfaces/PokemonEntries';
 
-  const props = defineProps<{
-    pokemonData: Pokemon;
-    pokemonEntries: PokemonEntries;
-  }>();
+const props = defineProps<{
+  pokemonData: Pokemon;
+  pokemonEntries: PokemonEntries;
+}>();
 
-  const padWithLeadingZeros = (num: number, totalLength: number) => {
-    return String(num).padStart(totalLength, '0');
-  };
+const padWithLeadingZeros = (num: number, totalLength: number) => {
+  return String(num).padStart(totalLength, '0');
+};
 </script>
 
 <template>
@@ -27,10 +27,7 @@
           <div class="pokemon_abilities">
             {{ $t('pokemon.abilities') }}
             <div>
-              <span
-                v-for="(ability, index) in pokemonData.abilities"
-                :key="ability.ability.name"
-              >
+              <span v-for="(ability, index) in pokemonData.abilities" :key="ability.ability.name">
                 {{ ability.ability.name }}
               </span>
             </div>
@@ -39,21 +36,14 @@
         <div class="pokemon_stats">
           <span>{{ $t('pokemon.stats') }}</span>
           <div class="stats_info">
-            <div
-              v-for="(stat, index) in pokemonData.stats"
-              :key="stat.stat.name"
-            >
+            <div v-for="(stat, index) in pokemonData.stats" :key="stat.stat.name">
               <span>{{ stat.stat.name.toUpperCase() }}</span>
               <span>{{ stat.base_stat }}</span>
             </div>
           </div>
         </div>
       </div>
-      <img
-        :src="pokemonData.sprites.other['official-artwork'].front_default"
-        alt=""
-        class="pokemon_image"
-      />
+      <img :src="pokemonData.sprites.other['official-artwork'].front_default" alt="" class="pokemon_image" />
     </div>
     <div>
       {{ pokemonEntries.flavor_text_entries[9].flavor_text }}
@@ -93,13 +83,13 @@
     gap: 0.5rem
     flex-grow: 1
     > div
-        display flex
-        justify-content space-between
-        flex-gap .5rem
+      display flex
+      justify-content space-between
+      flex-gap .5rem
 
   .pokemon_number
     position absolute
-    top 25%
+    top 20%
     left 10%
     text-align center
     width 100%
