@@ -32,5 +32,5 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['oh-vue-icons/icons'],
   },
-  base: '/PokeApi-vue/',
+  base: '/Pokedex-vue/',
 });
