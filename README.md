@@ -32,7 +32,7 @@ Using it, you can consume information on Pokémon, their moves, abilities, types
 
 
 ## Access it on GitHub-Pages
-You can see the full project by clicking <a href="https://igor-ponso.github.io/PokeApi-vue/" target="_blank">HERE </a>
+You can see the full project by clicking <a href="https://igor-ponso.github.io/Pokedex-vue/" target="_blank">HERE</a>
 
 
 
