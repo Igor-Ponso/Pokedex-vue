@@ -24,7 +24,7 @@ Is a simple project for study Vue 3 with Pinia store.
 <img src="https://user-images.githubusercontent.com/46560949/215301737-a99fb04d-d981-4027-9304-e45f2506a2da.png" align="right" width="20%"/>
 
 <p>Pokedex using the  <a href="https://pokeapi.co/" target="_blank">PokeApi</a> for constructing RESTful API.</p>
-<p>PokeAPI provides a RESTful API interface to highly detailed objects built from thousands of lines of data related to [Pokemon](https://en.wikipedia.org/wiki/Pokemon). </p>
+<p>PokeAPI provides a RESTful API interface to highly detailed objects built from thousands of lines of data related to <a href="https://en.wikipedia.org/wiki/Pokemon">Pokemon</a>. </p>
 <p>
 Using it, you can consume information on Pokémon, their moves, abilities, types, egg groups and much, much more.
 </p>
