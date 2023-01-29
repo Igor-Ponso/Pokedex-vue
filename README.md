@@ -9,16 +9,15 @@ Is a simple project for study Vue 3 with Pinia store.
   <img src="https://user-images.githubusercontent.com/46560949/215300834-7a0948c8-1700-404b-873d-3760d992e839.gif"/>
 </p>
 
-<p align="center">
-  You can see the full project by clicking <a href="https://igor-ponso.github.io/PokeApi-vue/" target="_blank">HERE </a>
-</p>
-
 
 ## Tech stack & Open-source libraries
 * TODO
 
+
 ## UI
 * TODO
+
+
 
 ## Open API
 
@@ -29,6 +28,12 @@ Is a simple project for study Vue 3 with Pinia store.
 <p>
 Using it, you can consume information on Pokémon, their moves, abilities, types, egg groups and much, much more.
 </p>
+
+
+
+## Access it on GitHub-Pages
+You can see the full project by clicking <a href="https://igor-ponso.github.io/PokeApi-vue/" target="_blank">HERE </a>
+
 
 
 ## Find this repository useful? :heart:
