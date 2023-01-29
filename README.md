@@ -48,7 +48,6 @@ Fell totally free for fork and modify it as you like and also give your opinion 
 <a href="https://linkedin.com/in/igorponso" target="_blank">
 <img style="margin: 10px" src="https://img.shields.io/badge/linkedin-%231E77B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white" alt="linkedin"/>
 </a>
-<a href = "mailto:igorponso07@gmail.com"><img style="margin: 10px" src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" target="_blank"></a>
 </p>
 
 # License
