@@ -13,7 +13,7 @@ Is a simple project for study Vue 3 with Pinia store.
 ## Tech stack & Open-source libraries
 * TODO
 
-## Architeture
+## Architecture
 * TODO
 
 ## UI
