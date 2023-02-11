@@ -3,7 +3,7 @@
   import Cards from '@/components/Cards/Cards.vue';
   import Modal from './components/Modal/Modal.vue';
   import { usePokemonStore } from '@/stores/Pokemon';
-  import { fetchPokemonsData } from './services/fetchPokemons';
+  import { fetchPokemonsData } from '@/services/Pokemon';
   import { useModalStore } from '@/stores/Modal';
   import { storeToRefs } from 'pinia';
 
