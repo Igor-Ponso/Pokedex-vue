@@ -1,13 +1,17 @@
 import vue from '@vitejs/plugin-vue';
 import { defineConfig } from 'vite';
-import { fileURLToPath, URL } from 'url';
 import path from 'node:path';
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
+import AutoImport from 'unplugin-auto-import/vite';
+import Components from 'unplugin-vue-components/vite';
+import Pages from 'vite-plugin-pages';
+import Inspect from 'vite-plugin-inspect';
+import Layouts from 'vite-plugin-vue-layouts';
 
 export default defineConfig({
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@': path.resolve(__dirname, './src'),
     },
   },
   css: {
@@ -22,15 +26,35 @@ export default defineConfig({
     VueI18nPlugin({
       include: path.resolve(__dirname, './path/to/src/locales/**'),
     }),
+    AutoImport({
+      dts: '@types/auto-imports.d.ts',
+      imports: ['vue', '@vueuse/core', '@vueuse/head', 'vue-router'],
+    }),
+    Layouts({
+      layoutsDirs: 'src/layouts',
+      defaultLayout: 'default',
+    }),
+    Pages({
+      extensions: ['vue'],
+    }),
+    Components({
+      extensions: ['vue'],
+      include: [/\.vue$/, /\.vue\?vue/],
+      dirs: [
+        'src/components/LayoutCompositions',
+        'src/components',
+        'src/widgets',
+      ],
+      dts: '@types/components.d.ts',
+      directoryAsNamespace: true,
+    }),
+    Inspect(),
   ],
   server: {
     host: '0.0.0.0',
-    port: 8000,
+    port: 3000,
     open: false,
     cors: true,
   },
-  optimizeDeps: {
-    exclude: ['oh-vue-icons/icons'],
-  },
-  base: '/Pokedex-vue/',
+  base: '/',
 });
