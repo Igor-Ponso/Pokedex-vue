@@ -1,46 +1,34 @@
 <script setup lang="ts">
-  import { ref, onMounted, computed } from 'vue';
-  import Cards from '@/components/Cards/Cards.vue';
-  import Modal from './components/Modal/Modal.vue';
-  import { usePokemonStore } from '@/stores/Pokemon';
-  import { fetchPokemonsData } from '@/services/Pokemon';
-  import { useModalStore } from '@/stores/Modal';
-  import { storeToRefs } from 'pinia';
+  /**
+   * First page after App->router-view.
+   * @name 'IndexPage'
+   * @version 1.0.0
+   */
+  import { useHead } from '@vueuse/head';
 
-  //TODO: implement virtualList with Infinite Scrolling
-  //import { useVirtualList } from '@vueuse/core';
+  useHead({
+    title: 'PokéDex Vite Pinia',
+    meta: [
+      {
+        name: 'description',
+        content: 'Pokedex made with Vue + Typescript + Pinia + Vite',
+      },
+    ],
+  });
 
-  const pokemonsData = usePokemonStore().pokemonList;
-
-  const modalStore = useModalStore();
-  const { isOpen, pokemonData, pokemonId } = storeToRefs(modalStore);
-  onMounted(fetchPokemonsData);
+  const router = useRouter();
+  onMounted(() => {
+    router.push('/pokemonList');
+  });
 </script>
 
 <template>
-  <h1>{{ $t('greetings') }}</h1>
-  <div id="card-area">
-    <template v-for="pokemon in pokemonsData" :key="pokemon.id">
-      <Cards
-        :pokemon="pokemon"
-        @click="
-          isOpen = true;
-          pokemonData = pokemon;
-          pokemonId = pokemon.id;
-        "
-      />
-    </template>
-
-    <Teleport to="#modal">
-      <Modal></Modal>
-    </Teleport>
-  </div>
+  <router-view />
 </template>
 
-<style lang="stylus" scoped>
-  #card-area
-    display inline-flex
-    flex-wrap wrap
-    justify-content center
-    gap: 3rem;
-</style>
+<style scoped></style>
+
+<route lang="yaml">
+meta:
+  layout: default
+</route>

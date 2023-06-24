@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-
 export const api = axios.create({
-    baseURL: 'https://pokeapi.co/api/v2',
-  });
+  baseURL: window.DM_ENV.API_URL,
+});
