@@ -1,9 +1,0 @@
-{
-  "greetings": "Pokédex",
-  "pokemon": {
-    "weight": "Peso",
-    "height": "Altura",
-    "abilities": "Habilidades",
-    "stats": "Estatísticas"
-  }
-}
