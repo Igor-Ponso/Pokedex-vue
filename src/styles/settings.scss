@@ -5,6 +5,53 @@
 // Font family
 $font-family-pokemon: 'Press Start 2P', cursive, Helvetica, Arial, sans-serif;
 
+// Type colors
+$type-colors: (
+  normal: #a0a29f,
+  normal-icon: #dcdcdc,
+  fire: #ffb971,
+  fire-icon: #dc872f,
+  water: #8cc4e2,
+  water-icon: #539ddf,
+  electric: #ffe662,
+  electric-icon: #d9b803,
+  grass: #78dd81,
+  grass-icon: #59b153,
+  ice: #8cf5e4,
+  ice-icon: #75d0c1,
+  fighting: #da7589,
+  fighting-icon: #d3425f,
+  poison: #d881ef,
+  poison-icon: #b763cf,
+  ground: #e69a74,
+  ground-icon: #da7c4d,
+  flying: #99ccff,
+  flying-icon: #80a0dd,
+  psychic: #f57ec3,
+  psychic-icon: #db1d8c,
+  bug: #bfe760,
+  bug-icon: #92bc2c,
+  rock: #c9bb8a,
+  rock-icon: #a38c21,
+  ghost: #8291e0,
+  ghost-icon: #5f6dbc,
+  dragon: #88a2e8,
+  dragon-icon: #0c69c8,
+  dark: #8e8c94,
+  dark-icon: #595761,
+  steel: #9fb8b9,
+  steel-icon: #5695a3,
+  fairy: #ee90e6,
+  fairy-icon: #fdb9e9
+);
+
+// Generate CSS variables for the type colors
+:root {
+  @each $key, $value in $type-colors {
+    --color-type-#{$key}: #{$value};
+  }
+}
+
 // Apply the font-family globally
 body {
   font-family: $font-family-pokemon;

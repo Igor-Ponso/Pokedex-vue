@@ -2,55 +2,10 @@
 <script lang="ts" setup>
   import { padWithLeadingZeros } from '@/composables/useUtils'
   import { capitalize } from 'vue'
-
-  type PokemonType =
-    | 'normal'
-    | 'fire'
-    | 'water'
-    | 'electric'
-    | 'grass'
-    | 'ice'
-    | 'fighting'
-    | 'poison'
-    | 'ground'
-    | 'flying'
-    | 'psychic'
-    | 'bug'
-    | 'rock'
-    | 'ghost'
-    | 'dragon'
-    | 'dark'
-    | 'steel'
-    | 'fairy';
-
-  interface OfficialArtwork {
-    front_default: string | null;
-    front_shiny: string | null;
-  }
-
-  interface PokemonSprites {
-    front_default: string | null;
-    front_shiny: string | null;
-    other: {
-      'official-artwork': OfficialArtwork;
-      home: {
-        front_default: string | null;
-        front_shiny: string | null;
-      };
-    };
-  }
-
-  interface Pokemon {
-    id: number;
-    name: string;
-    image: string;
-    types: PokemonType[];
-    abilities: string[];
-    sprites: PokemonSprites;
-  }
+  import type { Pokemon } from 'pokenode-ts'
 
   const props = defineProps<{
-    pokemon: Pokemon;
+    pokemon: Partial<Pokemon>
   }>()
 
   const shinyForm = ref(false)
@@ -62,56 +17,25 @@
   const pokemonImage = computed(() => {
     const sprites = props.pokemon.sprites
 
-    if (shinyForm.value) {
-      return (
-        sprites.other['official-artwork'].front_shiny ||
-        sprites.other.home.front_shiny ||
-        sprites.front_shiny ||
-        props.pokemon.image
-      )
-    } else {
-      return (
-        sprites.other['official-artwork'].front_default ||
-        sprites.other.home.front_default ||
-        sprites.front_default ||
-        props.pokemon.image
-      )
-    }
+    return shinyForm.value
+      ? (sprites?.other?.['official-artwork'] as any)?.front_shiny
+      : (sprites?.other?.['official-artwork'] as any)?.front_default
   })
 
-  const pokemonTypePath = (typeName: PokemonType) => {
-    return new URL(`/src/assets/svgs/type/${typeName}.svg`, import.meta.url).href
+  const pokemonTypePath = (typeName: string) => {
+    return new URL(`/src/assets/svgs/types/${typeName}.svg`, import.meta.url)
+      .href
   }
 
-  const typeColors: Record<PokemonType, string> = {
-    normal: '#a0a29f',
-    fire: '#ffb971',
-    water: '#8cc4e2',
-    electric: '#ffe662',
-    grass: '#78dd81',
-    ice: '#8cf5e4',
-    fighting: '#da7589',
-    poison: '#d881ef',
-    ground: '#e69a74',
-    flying: '#99ccff',
-    psychic: '#f57ec3',
-    bug: '#bfe760',
-    rock: '#c9bb8a',
-    ghost: '#8291e0',
-    dragon: '#88a2e8',
-    dark: '#8e8c94',
-    steel: '#9fb8b9',
-    fairy: '#ee90e6',
-  }
-
-  const checkTypes = (types: PokemonType[]) => {
+  const checkTypes = (types: { type: { name: string } }[] | undefined) => {
+    if (!types) return {}
     if (types.length === 2) {
       return {
-        background: `linear-gradient(${typeColors[types[0]]}, ${typeColors[types[1]]})`,
+        background: `linear-gradient(var(--color-type-${types[0].type.name}), var(--color-type-${types[1].type.name}))`,
       }
     } else {
       return {
-        background: typeColors[types[0]],
+        background: `var(--color-type-${types[0].type.name})`,
       }
     }
   }
@@ -119,11 +43,11 @@
 
 <template>
   <v-card
-    class="pokemon-card pa-3 elevation-2 cursor-pointer"
+    class="pokemon-card pa-3 elevation-2 cursor-pointer pokemon-font"
     :style="checkTypes(props.pokemon.types)"
   >
-    <v-card-title class="d-flex justify-space-between align-center">
-      <span>{{ padWithLeadingZeros(props.pokemon.id, 3) }}</span>
+    <v-card-title class="d-flex justify-space-between align-center pokemon-font">
+      <span>{{ padWithLeadingZeros(props.pokemon.id!, 3) }}</span>
       <v-btn icon @click.stop="toggleShiny">
         <v-icon>mdi-star</v-icon>
       </v-btn>
@@ -132,7 +56,7 @@
       <transition name="fade">
         <v-img
           :key="pokemonImage"
-          :alt="props.pokemon.name"
+          :alt="props.pokemon.name || 'Pokemon Image'"
           class="mx-auto"
           loading="lazy"
           max-width="150"
@@ -140,39 +64,29 @@
         />
       </transition>
     </v-card-subtitle>
-    <v-card-text class="text-center">
-      <h3>{{ capitalize(props.pokemon.name) }}</h3>
+    <v-card-text class="text-center pokemon-font">
+      <h3>{{ capitalize(props.pokemon.name || '') }}</h3>
       <div class="d-flex justify-center">
-        <v-chip
-          v-for="type in props.pokemon.types"
-          :key="type"
-          class="ma-1"
-          :color="typeColors[type]"
-          dark
+        <div
+          v-for="type in props.pokemon.types || []"
+          :key="type.type.name"
+          class="type-icon ma-1"
+          :style="{ backgroundColor: `var(--color-type-${type.type.name}-icon)` }"
         >
-          <v-img
-            alt=""
-            class="shrink-0"
-            contain
-            loading="lazy"
-            max-height="24"
-            max-width="24"
-            :src="pokemonTypePath(type)"
-          />
-          {{ type }}
-        </v-chip>
-      </div>
-      <div class="abilities mt-2">
-        <strong>Abilities:</strong>
-        <div v-for="ability in props.pokemon.abilities" :key="ability">
-          {{ capitalize(ability) }}
+          <img
+            :alt="type.type.name"
+            class="type-img"
+            :src="pokemonTypePath(type.type.name)"
+          >
         </div>
       </div>
     </v-card-text>
   </v-card>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/styles/settings';
+
 .pokemon-card {
   transition: transform 0.3s ease-out;
 }
@@ -193,5 +107,18 @@
 }
 .v-card-subtitle {
   opacity: unset;
+}
+
+.type-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.type-img {
+  width: 1.5rem;
+  height: 1.5rem;
 }
 </style>

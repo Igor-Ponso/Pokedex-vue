@@ -3,13 +3,14 @@
   import { onMounted, ref } from 'vue'
   import { getMinimalPokemonDetails, getPokemonListByNumber } from '@/services/pokemonService'
   import PokemonCard from '@/components/PokemonCard.vue'
+  import type { Pokemon } from 'pokenode-ts'
 
-  const pokemons = ref<{ id: number, name: string, image: string, types: string[] }[]>([])
+  const pokemons = ref<Partial<Pokemon>[]>([])
   const loading = ref(true)
 
   const fetchPokemons = async () => {
     try {
-      const pokemonList = await getPokemonListByNumber(30)
+      const pokemonList = await getPokemonListByNumber(151)
       pokemons.value = await getMinimalPokemonDetails(pokemonList)
     } catch (error) {
       console.error('Failed to fetch Pokémon:', error)
