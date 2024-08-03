@@ -1,8 +1,8 @@
 <!-- src/pages/index.vue -->
 <script lang="ts" setup>
-  import { capitalize } from 'vue'
+  import { onMounted, ref } from 'vue'
   import { getMinimalPokemonDetails, getPokemonListByNumber } from '@/services/pokemonService'
-  import { padWithLeadingZeros } from '@/composables/useUtils'
+  import PokemonCard from '@/components/PokemonCard.vue'
 
   const pokemons = ref<{ id: number, name: string, image: string, types: string[] }[]>([])
   const loading = ref(true)
@@ -36,24 +36,7 @@
         md="4"
         sm="6"
       >
-        <v-card>
-          <v-card-title>{{ padWithLeadingZeros(pokemon.id, 3) }}</v-card-title>
-          <v-card-subtitle>
-            <v-img
-              :alt="pokemon.name"
-              class="mx-auto"
-              max-width="150"
-              :src="pokemon.image"
-            />
-          </v-card-subtitle>
-          <v-card-text>{{ capitalize(pokemon.name) }}</v-card-text>
-          <v-card-actions>
-            <v-btn color="primary">Details</v-btn>
-          </v-card-actions>
-          {{ pokemon.types }}
-
-          <!-- Additional Pokémon details can be added here -->
-        </v-card>
+        <PokemonCard :pokemon="pokemon" />
       </v-col>
     </v-row>
   </v-container>

@@ -1,10 +1,16 @@
-/**
- * src/styles/settings.scss
- *
- * Configures SASS variables and Vuetify overwrites
- */
+// src/styles/settings.scss
 
-// https://vuetifyjs.com/features/sass-variables/`
-// @use 'vuetify/settings' with (
-//   $color-pack: false
-// );
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+// Font family
+$font-family-pokemon: 'Press Start 2P', cursive, Helvetica, Arial, sans-serif;
+
+// Apply the font-family globally
+body {
+  font-family: $font-family-pokemon;
+}
+
+// Or apply to specific elements
+.pokemon-font {
+  font-family: $font-family-pokemon;
+}
