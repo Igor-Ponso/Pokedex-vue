@@ -1,7 +1,7 @@
-<!-- src/components/PokemonCard.vue -->
+ <!-- src/components/PokemonCard.vue -->
 <script lang="ts" setup>
   import { padWithLeadingZeros } from '@/composables/useUtils'
-  import { capitalize } from 'vue'
+  import { capitalize, computed, ref } from 'vue'
   import type { Pokemon } from 'pokenode-ts'
 
   const props = defineProps<{
@@ -15,16 +15,15 @@
   }
 
   const pokemonImage = computed(() => {
-    const sprites = props.pokemon.sprites
+    const sprites = props.pokemon.sprites as any // Bypass TypeScript checking here
 
     return shinyForm.value
-      ? (sprites?.other?.['official-artwork'] as any)?.front_shiny
-      : (sprites?.other?.['official-artwork'] as any)?.front_default
+      ? sprites?.other?.['official-artwork']?.front_shiny
+      : sprites?.other?.['official-artwork']?.front_default
   })
 
   const pokemonTypePath = (typeName: string) => {
-    return new URL(`/src/assets/svgs/types/${typeName}.svg`, import.meta.url)
-      .href
+    return new URL(`/src/assets/svgs/types/${typeName}.svg`, import.meta.url).href
   }
 
   const checkTypes = (types: { type: { name: string } }[] | undefined) => {
@@ -45,6 +44,7 @@
   <v-card
     class="pokemon-card pa-3 elevation-2 cursor-pointer pokemon-font"
     :style="checkTypes(props.pokemon.types)"
+    @click="$emit('show-details' as 'showDetails', props.pokemon.name)"
   >
     <v-card-title class="d-flex justify-space-between align-center pokemon-font">
       <span>{{ padWithLeadingZeros(props.pokemon.id!, 3) }}</span>

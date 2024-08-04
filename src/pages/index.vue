@@ -1,44 +1,39 @@
 <!-- src/pages/index.vue -->
 <script lang="ts" setup>
-  import { onMounted, ref } from 'vue'
-  import { getMinimalPokemonDetails, getPokemonListByNumber } from '@/services/pokemonService'
+  import { onMounted } from 'vue'
+  import { usePokemonStore } from '@/stores/pokemonStore'
   import PokemonCard from '@/components/PokemonCard.vue'
-  import type { Pokemon } from 'pokenode-ts'
+  import PokemonDetailModal from '@/components/PokemonDetailModal.vue'
 
-  const pokemons = ref<Partial<Pokemon>[]>([])
-  const loading = ref(true)
+  const pokemonStore = usePokemonStore()
 
-  const fetchPokemons = async () => {
-    try {
-      const pokemonList = await getPokemonListByNumber(151)
-      pokemons.value = await getMinimalPokemonDetails(pokemonList)
-    } catch (error) {
-      console.error('Failed to fetch Pokémon:', error)
-    } finally {
-      loading.value = false
-    }
-  }
-
-  onMounted(fetchPokemons)
+  onMounted(() => {
+    pokemonStore.fetchPokemons(151)
+  })
 </script>
 
 <template>
   <v-container>
-    <v-row v-if="loading" justify="center">
+    <v-row v-if="pokemonStore.loading" justify="center">
       <v-col class="text-center" cols="12">
         <v-progress-circular color="primary" indeterminate />
       </v-col>
     </v-row>
     <v-row v-else>
       <v-col
-        v-for="pokemon in pokemons"
+        v-for="pokemon in pokemonStore.pokemons"
         :key="pokemon.name"
         cols="12"
         md="4"
         sm="6"
       >
-        <PokemonCard :pokemon="pokemon" />
+        <PokemonCard :pokemon="pokemon" @show-details="pokemonStore.showPokemonDetails" />
       </v-col>
     </v-row>
+    <PokemonDetailModal
+      :is-open="pokemonStore.isModalOpen"
+      :pokemon-name="pokemonStore.selectedPokemon"
+      @update:is-open="pokemonStore.isModalOpen = $event"
+    />
   </v-container>
 </template>

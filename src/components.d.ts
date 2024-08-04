@@ -11,6 +11,7 @@ declare module 'vue' {
     Card: typeof import('./components/Card.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     PokemonCard: typeof import('./components/PokemonCard.vue')['default']
+    PokemonDetailModal: typeof import('./components/PokemonDetailModal.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
