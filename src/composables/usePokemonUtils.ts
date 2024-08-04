@@ -16,3 +16,18 @@ export function getTypeColors (types: { type: { name: string } }[] | undefined) 
     }
   }
 }
+
+export const usePokemonStyles = (types: { type: { name: string } }[] | undefined) => {
+  return computed(() => {
+    if (!types) return {}
+    if (types.length === 2) {
+      return {
+        background: `linear-gradient(var(--color-type-${types[0].type.name}), var(--color-type-${types[1].type.name}))`,
+      }
+    } else {
+      return {
+        background: `var(--color-type-${types[0].type.name})`,
+      }
+    }
+  })
+}
