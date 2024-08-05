@@ -13,7 +13,7 @@
   const pokemonStore = usePokemonStore()
 
   const pokemonDetail = computed(() =>
-    pokemonStore.pokemons.find(pokemon => pokemon.name === props.pokemonName)
+    pokemonStore.pokemons.find(pokemon => pokemon.name === props.pokemonName) as EnhancedPokemon | undefined
   )
 
   const isOpen = computed({
@@ -29,7 +29,7 @@
     }
   })
 
-  function getPokedexEntry (pokemon?: EnhancedPokemon) {
+  const getPokedexEntry = (pokemon?: EnhancedPokemon): string => {
     if (!pokemon || !pokemon.speciesData) return 'No entry available'
 
     const flavorTexts = pokemon.speciesData.flavor_text_entries
@@ -37,7 +37,7 @@
     return englishText?.flavor_text || 'No entry available'
   }
 
-  function handleToggleShiny () {
+  const handleToggleShiny = (): void => {
     if (pokemonDetail.value) {
       pokemonStore.toggleShiny(pokemonDetail.value)
     }
