@@ -1,0 +1,552 @@
+.card-tcg
+  height 24rem
+  width 16rem
+  border-radius 2rem
+  padding 1.5rem 1.2rem
+  display flex
+  flex-direction column
+  color white
+  text-transform capitalize
+  user-select none
+  cursor pointer
+  transition all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+  position relative
+  overflow hidden
+  contain layout style paint
+
+  // Glass Morphism Effect leve para não perder as cores
+  backdrop-filter blur(8px) saturate(150%)
+  border 2px solid rgba(255, 255, 255, 0.25)
+  box-shadow 0 20px 50px rgba(0, 0, 0, 0.4), 0 10px 25px rgba(0, 0, 0, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.3), inset 0 -1px 2px rgba(0, 0, 0, 0.2)
+  transform-style preserve-3d
+  perspective 1000px
+
+  // Gradiente colorido baseado nos tipos do Pokemon (background principal VIBRANTE)
+  &::before
+    content ''
+    position absolute
+    inset 0
+    border-radius inherit
+    opacity 1
+    z-index -1
+    pointer-events none
+
+  // Fire type
+  &[data-type-1="fire"]::before
+    background linear-gradient(135deg, var(--color-fire) 0%, var(--color-type-fire) 100%)
+
+  &[data-type-1="fire"][data-type-2]:not([data-type-2=""])::before
+    background linear-gradient(135deg, var(--color-fire) 0%, var(--color-type-fire) 100%)
+
+  // Water type
+  &[data-type-1="water"]::before
+    background linear-gradient(135deg, var(--color-water) 0%, var(--color-type-water) 100%)
+
+  // Grass type
+  &[data-type-1="grass"]::before
+    background linear-gradient(135deg, var(--color-grass) 0%, var(--color-type-grass) 100%)
+
+  // Electric type
+  &[data-type-1="electric"]::before
+    background linear-gradient(135deg, var(--color-electric) 0%, var(--color-type-electric) 100%)
+
+  // Psychic type
+  &[data-type-1="psychic"]::before
+    background linear-gradient(135deg, var(--color-psychic) 0%, var(--color-type-psychic) 100%)
+
+  // Ice type
+  &[data-type-1="ice"]::before
+    background linear-gradient(135deg, var(--color-ice) 0%, var(--color-type-ice) 100%)
+
+  // Dragon type
+  &[data-type-1="dragon"]::before
+    background linear-gradient(135deg, var(--color-dragon) 0%, var(--color-type-dragon) 100%)
+
+  // Dark type
+  &[data-type-1="dark"]::before
+    background linear-gradient(135deg, var(--color-dark) 0%, var(--color-type-dark) 100%)
+
+  // Fairy type
+  &[data-type-1="fairy"]::before
+    background linear-gradient(135deg, var(--color-fairy) 0%, var(--color-type-fairy) 100%)
+
+  // Normal type
+  &[data-type-1="normal"]::before
+    background linear-gradient(135deg, var(--color-normal) 0%, var(--color-type-normal) 100%)
+
+  // Fighting type
+  &[data-type-1="fighting"]::before
+    background linear-gradient(135deg, var(--color-fighting) 0%, var(--color-type-fighting) 100%)
+
+  // Flying type
+  &[data-type-1="flying"]::before
+    background linear-gradient(135deg, var(--color-flying) 0%, var(--color-type-flying) 100%)
+
+  // Poison type
+  &[data-type-1="poison"]::before
+    background linear-gradient(135deg, var(--color-poison) 0%, var(--color-type-poison) 100%)
+
+  // Ground type
+  &[data-type-1="ground"]::before
+    background linear-gradient(135deg, var(--color-ground) 0%, var(--color-type-ground) 100%)
+
+  // Rock type
+  &[data-type-1="rock"]::before
+    background linear-gradient(135deg, var(--color-rock) 0%, var(--color-type-rock) 100%)
+
+  // Bug type
+  &[data-type-1="bug"]::before
+    background linear-gradient(135deg, var(--color-bug) 0%, var(--color-type-bug) 100%)
+
+  // Ghost type
+  &[data-type-1="ghost"]::before
+    background linear-gradient(135deg, var(--color-ghost) 0%, var(--color-type-ghost) 100%)
+
+  // Steel type
+  &[data-type-1="steel"]::before
+    background linear-gradient(135deg, var(--color-steel) 0%, var(--color-type-steel) 100%)
+
+  // Dual types - gradiente entre os dois tipos
+  // Fire combinations
+  &[data-type-1="fire"][data-type-2="flying"]::before
+    background linear-gradient(135deg, var(--color-fire) 0%, var(--color-flying) 100%)
+
+  // Water combinations
+  &[data-type-1="water"][data-type-2="flying"]::before
+    background linear-gradient(135deg, var(--color-water) 0%, var(--color-flying) 100%)
+
+  &[data-type-1="water"][data-type-2="poison"]::before
+    background linear-gradient(135deg, var(--color-water) 0%, var(--color-poison) 100%)
+
+  &[data-type-1="water"][data-type-2="psychic"]::before
+    background linear-gradient(135deg, var(--color-water) 0%, var(--color-psychic) 100%)
+
+  &[data-type-1="water"][data-type-2="ground"]::before
+    background linear-gradient(135deg, var(--color-water) 0%, var(--color-ground) 100%)
+
+  &[data-type-1="water"][data-type-2="ice"]::before
+    background linear-gradient(135deg, var(--color-water) 0%, var(--color-ice) 100%)
+
+  // Grass combinations
+  &[data-type-1="grass"][data-type-2="poison"]::before
+    background linear-gradient(135deg, var(--color-grass) 0%, var(--color-poison) 100%)
+
+  &[data-type-1="grass"][data-type-2="psychic"]::before
+    background linear-gradient(135deg, var(--color-grass) 0%, var(--color-psychic) 100%)
+
+  // Electric combinations
+  &[data-type-1="electric"][data-type-2="flying"]::before
+    background linear-gradient(135deg, var(--color-electric) 0%, var(--color-flying) 100%)
+
+  &[data-type-1="electric"][data-type-2="steel"]::before
+    background linear-gradient(135deg, var(--color-electric) 0%, var(--color-steel) 100%)
+
+  // Normal combinations
+  &[data-type-1="normal"][data-type-2="flying"]::before
+    background linear-gradient(135deg, var(--color-normal) 0%, var(--color-flying) 100%)
+
+  // Bug combinations
+  &[data-type-1="bug"][data-type-2="poison"]::before
+    background linear-gradient(135deg, var(--color-bug) 0%, var(--color-poison) 100%)
+
+  &[data-type-1="bug"][data-type-2="flying"]::before
+    background linear-gradient(135deg, var(--color-bug) 0%, var(--color-flying) 100%)
+
+  &[data-type-1="bug"][data-type-2="grass"]::before
+    background linear-gradient(135deg, var(--color-bug) 0%, var(--color-grass) 100%)
+
+  // Poison combinations
+  &[data-type-1="poison"][data-type-2="flying"]::before
+    background linear-gradient(135deg, var(--color-poison) 0%, var(--color-flying) 100%)
+
+  &[data-type-1="poison"][data-type-2="ground"]::before
+    background linear-gradient(135deg, var(--color-poison) 0%, var(--color-ground) 100%)
+
+  // Ground combinations
+  &[data-type-1="ground"][data-type-2="rock"]::before
+    background linear-gradient(135deg, var(--color-ground) 0%, var(--color-rock) 100%)
+
+  &[data-type-1="ground"][data-type-2="poison"]::before
+    background linear-gradient(135deg, var(--color-ground) 0%, var(--color-poison) 100%)
+
+  // Rock combinations
+  &[data-type-1="rock"][data-type-2="ground"]::before
+    background linear-gradient(135deg, var(--color-rock) 0%, var(--color-ground) 100%)
+
+  &[data-type-1="rock"][data-type-2="water"]::before
+    background linear-gradient(135deg, var(--color-rock) 0%, var(--color-water) 100%)
+
+  // Fighting combinations
+  &[data-type-1="fighting"][data-type-2="flying"]::before
+    background linear-gradient(135deg, var(--color-fighting) 0%, var(--color-flying) 100%)
+
+  // Psychic combinations
+  &[data-type-1="psychic"][data-type-2="fairy"]::before
+    background linear-gradient(135deg, var(--color-psychic) 0%, var(--color-fairy) 100%)
+
+  &[data-type-1="psychic"][data-type-2="flying"]::before
+    background linear-gradient(135deg, var(--color-psychic) 0%, var(--color-flying) 100%)
+
+  // Ice combinations
+  &[data-type-1="ice"][data-type-2="flying"]::before
+    background linear-gradient(135deg, var(--color-ice) 0%, var(--color-flying) 100%)
+
+  &[data-type-1="ice"][data-type-2="psychic"]::before
+    background linear-gradient(135deg, var(--color-ice) 0%, var(--color-psychic) 100%)
+
+  // Dragon combinations
+  &[data-type-1="dragon"][data-type-2="flying"]::before
+    background linear-gradient(135deg, var(--color-dragon) 0%, var(--color-flying) 100%)
+
+  // Shiny glass reflection
+  &::after
+    content ''
+    position absolute
+    top 5%
+    left 5%
+    width 40%
+    height 30%
+    background linear-gradient(145deg, rgba(255, 255, 255, 0.4), transparent)
+    border-radius 1rem
+    opacity 0.3
+    filter blur(10px)
+    pointer-events none
+    z-index 2
+
+  &.hovered
+    border-color rgba(255, 255, 255, 0.4)
+    box-shadow 0 30px 70px rgba(0, 0, 0, 0.5), 0 15px 35px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.4), inset 0 -2px 4px rgba(0, 0, 0, 0.2)
+
+    &::after
+      opacity 0.5
+
+    .pokemon-image-container img
+      transform scale(1.15)
+
+    .image-glow
+      opacity 0.8
+
+    .holo-effect
+      opacity 1
+
+  &.shiny
+    animation shiny-pulse 2s ease-in-out infinite
+    border-color rgba(255, 215, 0, 0.6)
+    box-shadow 0 0 30px rgba(255, 215, 0, 0.5), 0 20px 50px rgba(0, 0, 0, 0.4), 0 10px 25px rgba(0, 0, 0, 0.25)
+
+// Border holográfico
+.tcg-border
+  position absolute
+  inset 3px
+  border-radius 1.8rem
+  border 1px solid rgba(255, 255, 255, 0.15)
+  pointer-events none
+  z-index 3
+
+.card-back-overlay
+  position absolute
+  inset 0
+  z-index 100
+  display flex
+  align-items center
+  justify-content center
+  background rgba(0, 0, 0, 0.2)
+  backdrop-filter blur(5px)
+  border-radius inherit
+
+.card-header
+  display flex
+  justify-content space-between
+  align-items center
+  margin-bottom 0.5rem
+  z-index 10
+
+  .pokemon-number
+    font-size 0.9rem
+    font-weight 700
+    font-family var(--retro-font)
+    background rgba(0,0,0,0.3)
+    padding 0.4rem 0.8rem
+    border-radius 2rem
+    backdrop-filter blur(5px)
+
+  .card-actions
+    display flex
+    gap 0.5rem
+
+.action-btn
+  width 2.5rem
+  height 2.5rem
+  border-radius 50%
+  border none
+  display flex
+  justify-content center
+  align-items center
+  background rgba(0, 0, 0, 0.3)
+  backdrop-filter blur(10px)
+  border 2px solid rgba(255,255,255,0.3)
+  cursor pointer
+  transition all 0.3s ease
+  z-index 10
+
+  &:hover
+    background rgba(255, 255, 255, 0.2)
+    transform scale(1.1)
+    border-color rgba(255,255,255,0.5)
+
+  &.active
+    background rgba(255, 215, 0, 0.4)
+    border-color rgba(255, 215, 0, 0.7)
+    box-shadow 0 0 15px rgba(255, 215, 0, 0.5)
+
+.pokemon-image-container
+  position relative
+  flex 1
+  display flex
+  align-items center
+  justify-content center
+  margin 0.5rem 0
+  z-index 5
+
+  img
+    max-width 100%
+    max-height 100%
+    object-fit contain
+    filter drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3))
+    transition transform 0.4s ease
+    z-index 5
+
+.image-glow
+  position absolute
+  inset 10%
+  background radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent 70%)
+  opacity 0
+  transition opacity 0.3s ease
+  pointer-events none
+  filter blur(20px)
+  z-index 4
+
+.pokemon-info
+  display flex
+  flex-direction column
+  gap 0.5rem
+  z-index 10
+  background rgba(0,0,0,0.2)
+  padding 0.6rem 0.8rem
+  border-radius 1rem
+  backdrop-filter blur(10px)
+  margin-top auto
+  width 100%
+  box-sizing border-box
+
+  .pokemon-name
+    font-size 1.3rem
+    font-weight 700
+    font-family var(--retro-font)
+    margin 0
+    text-align center
+    text-shadow 2px 2px 4px rgba(0,0,0,0.5)
+
+.pokemon-types
+  display flex
+  justify-content center
+  gap 0.5rem
+  flex-wrap wrap
+
+.type-badge
+  display flex
+  align-items center
+  gap 0.4rem
+  padding 0.4rem 0.8rem
+  border-radius 2rem
+  backdrop-filter blur(5px)
+  border 1px solid rgba(255,255,255,0.3)
+  transition all 0.3s ease
+
+  &:hover
+    transform translateY(-2px)
+    box-shadow 0 4px 8px rgba(0,0,0,0.2)
+
+  .type-icon
+    width 1.2rem
+    height 1.2rem
+    filter drop-shadow(0 2px 2px rgba(0,0,0,0.3))
+
+  .type-name
+    font-size 0.75rem
+    font-weight 600
+    text-transform uppercase
+    letter-spacing 0.5px
+
+.hp-section
+  display flex
+  align-items center
+  gap 0.4rem
+  font-family var(--retro-font)
+  width 100%
+
+  .hp-label
+    font-size 0.8rem
+    font-weight 700
+    color rgba(255,255,255,0.9)
+    flex-shrink 0
+
+  .hp-bar
+    flex 1
+    min-width 0
+    height 0.5rem
+    background rgba(0,0,0,0.3)
+    border-radius 1rem
+    overflow hidden
+    border 1px solid rgba(255,255,255,0.2)
+
+    .hp-fill
+      height 100%
+      background linear-gradient(90deg, #4ade80 0%, #22c55e 100%)
+      border-radius 1rem
+      transition width 0.3s ease
+      box-shadow 0 0 10px rgba(74, 222, 128, 0.5)
+
+  .hp-value
+    font-size 0.75rem
+    font-weight 600
+    min-width 1.5rem
+    text-align right
+    color rgba(255,255,255,0.95)
+    flex-shrink 0
+
+// Sparkles para shiny
+.sparkles
+  position absolute
+  inset 0
+  pointer-events none
+  z-index 50
+
+  .sparkle
+    position absolute
+    font-size 1.5rem
+    animation sparkle-float 3s ease-in-out infinite
+    animation-delay var(--delay, 0s)
+    opacity 0
+
+    &:nth-child(1)
+      top 10%
+      left 15%
+
+    &:nth-child(2)
+      top 20%
+      right 20%
+
+    &:nth-child(3)
+      top 40%
+      left 10%
+
+    &:nth-child(4)
+      top 60%
+      right 15%
+
+    &:nth-child(5)
+      top 80%
+      left 20%
+
+    &:nth-child(6)
+      top 15%
+      left 50%
+
+    &:nth-child(7)
+      top 70%
+      right 25%
+
+    &:nth-child(8)
+      top 50%
+      left 5%
+
+// Holo wrapper
+.holo-wrapper
+  position absolute
+  inset 0
+  border-radius 2rem
+  overflow hidden
+  pointer-events none
+  z-index 8
+  mix-blend-mode screen
+
+  .holo-sparkle
+    position absolute
+    inset 0
+    background-image radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px), radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 1px)
+    background-size 50px 50px, 80px 80px
+    background-position 0 0, 40px 60px
+    opacity 0.15
+    animation sparkle-move 20s linear infinite
+
+  .holo-effect
+    position absolute
+    inset 0
+    opacity 0.4
+    transition opacity 0.3s ease
+
+  .holo-rainbow
+    position absolute
+    inset 0
+    background linear-gradient(115deg, transparent 0%, rgba(255,0,255,0.3) 25%, transparent 47%, transparent 53%, rgba(0,255,255,0.3) 75%, transparent 100%)
+    background-size 200% 200%
+    opacity 0.2
+    filter blur(8px)
+
+// TCG Card Wrapper (para cards oficiais)
+.tcg-card-wrapper
+  position relative
+  width 16rem
+  height 24rem
+  cursor pointer
+  transition all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+  transform-style preserve-3d
+  perspective 1000px
+  border-radius 1rem
+  overflow visible
+
+  &.hovered
+    .tcg-card-image
+      filter brightness(1.05) contrast(1.02)
+
+  .tcg-card-image
+    width 100%
+    height 100%
+    object-fit cover
+    border-radius 1.2rem
+    transition all 0.3s ease
+    box-shadow 0 20px 50px rgba(0, 0, 0, 0.5), 0 10px 25px rgba(0, 0, 0, 0.3)
+
+  .card-actions-overlay
+    position absolute
+    top 1rem
+    right 1rem
+    display flex
+    gap 0.5rem
+    z-index 10
+
+// Animações
+@keyframes shiny-pulse
+  0%, 100%
+    box-shadow 0 0 30px rgba(255, 215, 0, 0.5), 0 20px 50px rgba(0, 0, 0, 0.4), 0 10px 25px rgba(0, 0, 0, 0.25)
+  50%
+    box-shadow 0 0 50px rgba(255, 215, 0, 0.8), 0 20px 50px rgba(0, 0, 0, 0.4), 0 10px 25px rgba(0, 0, 0, 0.25)
+
+@keyframes sparkle-float
+  0%, 100%
+    transform translateY(0) rotate(0deg)
+    opacity 0
+  25%
+    opacity 1
+  50%
+    transform translateY(-20px) rotate(180deg)
+    opacity 1
+  75%
+    opacity 1
+
+@keyframes sparkle-move
+  0%
+    transform translate(0, 0)
+  100%
+    transform translate(50px, 50px)

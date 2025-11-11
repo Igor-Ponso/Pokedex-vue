@@ -8,37 +8,35 @@
 
   import { ref } from 'vue';
   import { useModalStore } from '@/stores/Modal';
-  import { usePokemonStore } from '@/stores/Pokemon';
+  import { usePokemonStore } from '@/stores/PokemonStore';
   import { storeToRefs } from 'pinia';
   import { onClickOutside } from '@vueuse/core';
-  import PokemonInfo from './PokemonInfo.vue';
+  import GameBoyModal from './GameBoyModal.vue';
 
   const modalStore = useModalStore();
   const { isOpen, pokemonData, pokemonId } = storeToRefs(modalStore);
   const pokemonStore = usePokemonStore();
-  const { pokemonEntries } = storeToRefs(pokemonStore);
 
   const modal = ref(null);
 
   onClickOutside(modal, () => (isOpen.value = false));
+
+  // Get pokemon entries from the pokemon store
+  const getPokemonEntries = () => {
+    const pokemon = pokemonStore.getPokemonById(pokemonId.value);
+    return pokemon?.species;
+  };
 </script>
 
 <template>
   <Transition name="modal">
     <div class="modal-bg" v-if="isOpen">
-      <div
-        class="modal"
+      <GameBoyModal
         ref="modal"
-        :style="{
-          background: `linear-gradient(var(--color-${pokemonData.types[0].type.name}), var(--color-type-${pokemonData.types[0].type.name}))`,
-        }"
-      >
-        <button @click="isOpen = false" class="close-btn">X</button>
-        <PokemonInfo
-          :pokemon-data="pokemonData"
-          :pokemon-entries="pokemonEntries[pokemonId - 1]"
-        />
-      </div>
+        :pokemon-data="pokemonData"
+        :pokemon-entries="getPokemonEntries()"
+        @close="isOpen = false"
+      />
     </div>
   </Transition>
 </template>

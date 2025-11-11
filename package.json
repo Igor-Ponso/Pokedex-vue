@@ -4,6 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "homepage": "https://igor-ponso.github.io/pokedex-vue/",
+  "engines": {
+    "node": ">=22.12.0",
+    "npm": ">=10.0.0"
+  },
   "scripts": {
     "dev": "vite --port 8000 --open",
     "build": "vue-tsc && vite build",
@@ -12,31 +16,27 @@
     "preview": "vite preview --port 8080 --open"
   },
   "dependencies": {
-    "@intlify/unplugin-vue-i18n": "^0.8.1",
-    "@types/node": "^18.11.17",
-    "@vueuse/core": "^9.11.0",
-    "axios": "^1.2.2",
-    "commitizen": "^4.2.6",
-    "eslint": "^8.31.0",
-    "gh-pages": "^4.0.0",
+    "@intlify/unplugin-vue-i18n": "^11.0.1",
+    "@types/node": "^24.10.0",
+    "@vueuse/core": "^14.0.0",
+    "axios": "^1.13.2",
+    "eslint": "^9.39.1",
+    "gh-pages": "^6.3.0",
     "oh-vue-icons": "^1.0.0-rc3",
-    "pinia": "^2.0.28",
-    "stylus": "^0.59.0",
-    "vue": "^3.2.45",
-    "vue-i18n": "9",
+    "pinia": "^3.0.4",
+    "stylus": "^0.64.0",
+    "vue": "^3.5.24",
+    "vue-i18n": "11",
     "vue-toastification": "^2.0.0-rc.5"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.0.0",
-    "prettier": "2.8.2",
-    "typescript": "^4.9.3",
-    "vite": "^4.0.0",
-    "vitest": "^0.26.3",
-    "vue-tsc": "^1.0.11"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/devtools": "^8.0.3",
+    "prettier": "3.6.2",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.2",
+    "vite-plugin-vue-devtools": "^8.0.3",
+    "vitest": "^4.0.8",
+    "vue-tsc": "^3.1.3"
   }
 }

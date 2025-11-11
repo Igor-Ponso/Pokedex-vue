@@ -1,6 +1,6 @@
-import { usePokemonStore } from '@/stores/Pokemon';
 import { api } from '@/api/config';
-import { useToast } from 'vue-toastification';
+import { useAppToast } from '@/composables/useAppToast';
+import { usePokemonStore } from '@/stores/Pokemon';
 
 export const fetchPokemonsData = async () => {
   try {
@@ -14,7 +14,7 @@ export const fetchPokemonsData = async () => {
       });
     }
   } catch (err: any) {
-    useToast().error(`Erro ao consultar os dados - ${err?.response?.status}`);
+  useAppToast().error(`Erro ao consultar os dados - ${err?.response?.status}`);
   }
 };
 

@@ -1,16 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 :root {
-  font-family: 'Press Start 2P', cursive, Helvetica, Arial, sans-serif;
+  --primary-font: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --retro-font: 'Press Start 2P', cursive;
+  
+  font-family: var(--primary-font);
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #1a1a1a;
+  color: rgba(255, 255, 255, 0.95);
+  background-color: transparent;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -21,21 +23,64 @@
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
+  display: block;
   min-width: 320px;
   min-height: 100vh;
+  background: var(--bg-primary);
+  background-attachment: fixed;
+}
+
+h1 {
+  font-family: var(--retro-font);
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: white;
+  text-shadow: 3px 3px 0px rgba(0,0,0,0.3),
+               6px 6px 0px rgba(0,0,0,0.2),
+               9px 9px 0px rgba(0,0,0,0.1);
+  letter-spacing: 2px;
+  animation: titleGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+  from {
+    text-shadow: 3px 3px 0px rgba(0,0,0,0.3),
+                 6px 6px 0px rgba(0,0,0,0.2),
+                 9px 9px 0px rgba(0,0,0,0.1),
+                 0 0 20px rgba(255,255,255,0.3);
+  }
+  to {
+    text-shadow: 3px 3px 0px rgba(0,0,0,0.3),
+                 6px 6px 0px rgba(0,0,0,0.2),
+                 9px 9px 0px rgba(0,0,0,0.1),
+                 0 0 30px rgba(255,255,255,0.5);
+  }
 }
 
 #app {
-  max-width: 1280px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  background-image: url(./assets/images/background.jfif);
-  background-size: auto;
-  background-repeat: repeat;
-  background-position: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e8ba3 100%);
+  background-attachment: fixed;
+  position: relative;
+}
+
+#app::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(255, 219, 112, 0.2) 0%, transparent 50%);
+  z-index: -1;
+  pointer-events: none;
 }
 
 @media (prefers-color-scheme: light) {
@@ -48,5 +93,63 @@ body {
   }
   button {
     background-color: #f9f9f9;
+  }
+}
+
+/* Variáveis CSS para dark mode */
+:root {
+  --bg-primary: var(--bg-primary-light, #1e3c72);
+  --bg-secondary: var(--bg-secondary-light, #2a5298);
+  --bg-tertiary: var(--bg-tertiary-light, #7e8ba3);
+  --text-primary: var(--text-primary-light, rgba(255, 255, 255, 0.95));
+  --text-secondary: var(--text-secondary-light, rgba(255, 255, 255, 0.8));
+  --text-tertiary: var(--text-tertiary-light, rgba(255, 255, 255, 0.6));
+  --border-color: var(--border-color-light, rgba(255, 255, 255, 0.2));
+  --shadow-color: var(--shadow-color-light, rgba(0, 0, 0, 0.3));
+  --card-bg: var(--card-bg-light, rgba(255, 255, 255, 0.1));
+  --hover-bg: var(--hover-bg-light, rgba(255, 255, 255, 0.15));
+}
+
+/* Valores para light mode */
+:root {
+  --bg-primary-light: #1e3c72;
+  --bg-secondary-light: #2a5298;
+  --bg-tertiary-light: #7e8ba3;
+  --text-primary-light: rgba(255, 255, 255, 0.95);
+  --text-secondary-light: rgba(255, 255, 255, 0.8);
+  --text-tertiary-light: rgba(255, 255, 255, 0.6);
+  --border-color-light: rgba(255, 255, 255, 0.2);
+  --shadow-color-light: rgba(0, 0, 0, 0.3);
+  --card-bg-light: rgba(255, 255, 255, 0.1);
+  --hover-bg-light: rgba(255, 255, 255, 0.15);
+}
+
+/* Valores para dark mode */
+:root {
+  --bg-primary-dark: #0f2027;
+  --bg-secondary-dark: #203a43;
+  --bg-tertiary-dark: #2c5364;
+  --text-primary-dark: rgba(255, 255, 255, 0.95);
+  --text-secondary-dark: rgba(255, 255, 255, 0.8);
+  --text-tertiary-dark: rgba(255, 255, 255, 0.6);
+  --border-color-dark: rgba(255, 255, 255, 0.2);
+  --shadow-color-dark: rgba(0, 0, 0, 0.5);
+  --card-bg-dark: rgba(255, 255, 255, 0.1);
+  --hover-bg-dark: rgba(255, 255, 255, 0.15);
+}
+
+/* Aplicação das variáveis de dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: var(--bg-primary-dark);
+    --bg-secondary: var(--bg-secondary-dark);
+    --bg-tertiary: var(--bg-tertiary-dark);
+    --text-primary: var(--text-primary-dark);
+    --text-secondary: var(--text-secondary-dark);
+    --text-tertiary: var(--text-tertiary-dark);
+    --border-color: var(--border-color-dark);
+    --shadow-color: var(--shadow-color-dark);
+    --card-bg: var(--card-bg-dark);
+    --hover-bg: var(--hover-bg-dark);
   }
 }

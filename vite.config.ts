@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 import { fileURLToPath, URL } from 'url';
 import path from 'node:path';
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
+import VueDevTools from 'vite-plugin-vue-devtools';
 
 export default defineConfig({
   resolve: {
@@ -19,8 +20,9 @@ export default defineConfig({
   },
   plugins: [
     vue(),
+    VueDevTools(),
     VueI18nPlugin({
-      include: path.resolve(__dirname, './path/to/src/locales/**'),
+      include: path.resolve(__dirname, './src/locales/**'),
     }),
   ],
   server: {

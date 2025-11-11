@@ -1,9 +1,47 @@
 {
-  "greetings": "Pokédex",
+  "app": {
+    "title": "Pokédex",
+    "subtitle": "Gotta Catch 'Em All!"
+  },
+  "nav": {
+    "pokedex": "Pokédex",
+    "favoriteTeam": "Favorite Team"
+  },
   "pokemon": {
-    "weight": "weight",
-    "height": "height",
-    "abilities": "abilities",
-    "stats": "Stats"
+    "weight": "Weight",
+    "height": "Height",
+    "abilities": "Abilities",
+    "stats": "Stats",
+    "hp": "HP",
+    "attack": "Attack",
+    "defense": "Defense",
+    "specialAttack": "Sp. Attack",
+    "specialDefense": "Sp. Defense",
+    "speed": "Speed",
+    "cry": "CRY",
+    "shiny": "Shiny"
+  },
+  "filters": {
+    "search": "Search Pokémon by name or number...",
+    "generation": "Generation",
+    "types": "Types",
+    "selectTypes": "Select types...",
+    "clearAll": "Clear All"
+  },
+  "team": {
+    "title": "Favorite Team",
+    "count": "{count}/6",
+    "empty": "No Pokémon selected",
+    "full": "Team complete!",
+    "clear": "Clear Team",
+    "emptySlot": "Empty",
+    "addPokemon": "Add Pokémon"
+  },
+  "messages": {
+    "welcome": "Welcome to the Modern Pokédex!",
+    "noPokemon": "No Pokémon found",
+    "tryAdjust": "Try adjusting your filters or search",
+    "loading": "Loading Pokémon...",
+    "loadingMore": "Loading more..."
   }
 }

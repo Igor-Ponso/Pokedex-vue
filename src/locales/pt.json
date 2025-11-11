@@ -1,0 +1,47 @@
+{
+  "app": {
+    "title": "Pokédex",
+    "subtitle": "Temos Que Pegar!"
+  },
+  "nav": {
+    "pokedex": "Pokédex",
+    "favoriteTeam": "Time Favorito"
+  },
+  "pokemon": {
+    "weight": "Peso",
+    "height": "Altura",
+    "abilities": "Habilidades",
+    "stats": "Atributos",
+    "hp": "PS",
+    "attack": "Ataque",
+    "defense": "Defesa",
+    "specialAttack": "Atq. Especial",
+    "specialDefense": "Def. Especial",
+    "speed": "Velocidade",
+    "cry": "GRITO",
+    "shiny": "Shiny"
+  },
+  "filters": {
+    "search": "Buscar Pokémon por nome ou número...",
+    "generation": "Geração",
+    "types": "Tipos",
+    "selectTypes": "Selecionar tipos...",
+    "clearAll": "Limpar Tudo"
+  },
+  "team": {
+    "title": "Time Favorito",
+    "count": "{count}/6",
+    "empty": "Nenhum Pokémon selecionado",
+    "full": "Time completo!",
+    "clear": "Limpar Time",
+    "emptySlot": "Vazio",
+    "addPokemon": "Adicionar Pokémon"
+  },
+  "messages": {
+    "welcome": "Bem-vindo à Pokédex Moderna!",
+    "noPokemon": "Nenhum Pokémon encontrado",
+    "tryAdjust": "Tente ajustar seus filtros ou busca",
+    "loading": "Carregando Pokémon...",
+    "loadingMore": "Carregando mais..."
+  }
+}

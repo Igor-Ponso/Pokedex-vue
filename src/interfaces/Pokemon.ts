@@ -1,6 +1,9 @@
+import type { TCGCard } from '@/services/PokemonTCGService';
+
 export interface Pokemon {
   abilities: Ability[];
   base_experience: number;
+  cries: Cries;
   forms: Form[];
   game_indices: Index[];
   height: number;
@@ -17,6 +20,12 @@ export interface Pokemon {
   stats: Stat[];
   types: Type[];
   weight: number;
+  tcgCard?: TCGCard; // Card oficial do Pokemon TCG
+}
+
+export interface Cries {
+  latest: string;
+  legacy: string;
 }
 
 export interface Ability {

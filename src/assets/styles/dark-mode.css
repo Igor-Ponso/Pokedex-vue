@@ -1,0 +1,112 @@
+/* Dark Mode Styles */
+html.dark,
+html[data-theme='dark'] {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-tertiary: rgba(255, 255, 255, 0.6);
+  --border-color: rgba(255, 255, 255, 0.2);
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --hover-bg: rgba(255, 255, 255, 0.1);
+}
+
+html.dark body,
+html[data-theme='dark'] body {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  color: var(--text-primary);
+}
+
+html.dark #app,
+html[data-theme='dark'] #app {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+}
+
+html.dark #app::before,
+html[data-theme='dark'] #app::before {
+  background-image:
+    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(34, 211, 238, 0.1) 0%, transparent 50%);
+}
+
+html.dark h1,
+html[data-theme='dark'] h1 {
+  color: white;
+  text-shadow:
+    3px 3px 0px rgba(0,0,0,0.5),
+    6px 6px 0px rgba(0,0,0,0.3),
+    9px 9px 0px rgba(0,0,0,0.2),
+    0 0 30px rgba(59, 130, 246, 0.5);
+}
+
+html.dark .generation-filter,
+html[data-theme='dark'] .generation-filter {
+  background: rgba(30, 41, 59, 0.8);
+  border-color: rgba(148, 163, 184, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+html.dark .card,
+html[data-theme='dark'] .card {
+  box-shadow:
+    0 10px 20px rgba(0,0,0,0.4),
+    0 6px 6px rgba(0,0,0,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+html.dark .card:hover,
+html[data-theme='dark'] .card:hover {
+  box-shadow:
+    0 15px 30px rgba(0,0,0,0.5),
+    0 10px 10px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.3),
+    0 0 30px rgba(59, 130, 246, 0.3);
+}
+
+html.dark .search-input,
+html[data-theme='dark'] .search-input {
+  background: rgba(30, 41, 59, 0.8);
+  border-color: rgba(148, 163, 184, 0.3);
+  color: white;
+}
+
+html.dark .search-input:focus,
+html[data-theme='dark'] .search-input:focus {
+  background: rgba(30, 41, 59, 0.9);
+  border-color: rgba(59, 130, 246, 0.6);
+}
+
+html.dark .generation-btn,
+html[data-theme='dark'] .generation-btn,
+html.dark .type-btn,
+html[data-theme='dark'] .type-btn {
+  background: rgba(30, 41, 59, 0.6);
+  border-color: rgba(148, 163, 184, 0.3);
+}
+
+html.dark .generation-btn:hover,
+html[data-theme='dark'] .generation-btn:hover,
+html.dark .type-btn:hover,
+html[data-theme='dark'] .type-btn:hover {
+  background: rgba(30, 41, 59, 0.8);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+html.dark .generation-btn.active,
+html[data-theme='dark'] .generation-btn.active {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(139, 92, 246, 0.5));
+  border-color: rgba(59, 130, 246, 0.9);
+  box-shadow:
+    0 4px 12px rgba(59, 130, 246, 0.6),
+    0 0 30px rgba(59, 130, 246, 0.4);
+}
+
+html.dark .empty-state,
+html[data-theme='dark'] .empty-state,
+html.dark .error-message,
+html[data-theme='dark'] .error-message {
+  color: white;
+}
