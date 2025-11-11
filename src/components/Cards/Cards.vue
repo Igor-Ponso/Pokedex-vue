@@ -11,7 +11,7 @@ import { Pokemon, Species } from '@/interfaces/Pokemon';
 import type { PokemonEntries } from '@/interfaces/PokemonEntries';
 import { usePokemonStore } from '@/stores/PokemonStore';
 import { storeToRefs } from 'pinia';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 
 // Tipo mais flexível para o card: não exige species completa e permite species detalhada opcional
 // Aceita tanto o formato básico (Species) quanto o detalhado (PokemonEntries) e torna opcional
@@ -39,12 +39,26 @@ type PokemonCard = Omit<Pokemon, 'species'> & { species?: Species | PokemonEntri
     return typeIcons[key] || '';
   };
 
-  // Retorna data attributes para aplicar estilos via CSS
-  const getTypeAttributes = () => {
-    return {
-      'data-type-1': props.pokemon.types[0]?.type.name || '',
-      'data-type-2': props.pokemon.types[1]?.type.name || ''
-    };
+  const checkTypes = (types: number) => {
+    if (types === 2) {
+      return {
+        background: `linear-gradient(135deg,
+          var(--color-${props.pokemon.types[0].type.name}) 0%,
+          var(--color-${props.pokemon.types[1].type.name}) 100%)`,
+        boxShadow: `0 10px 20px rgba(0,0,0,0.2),
+                   0 6px 6px rgba(0,0,0,0.1),
+                   inset 0 1px 0 rgba(255,255,255,0.3)`,
+      };
+    } else {
+      return {
+        background: `linear-gradient(135deg,
+          var(--color-${props.pokemon.types[0].type.name}) 0%,
+          var(--color-type-${props.pokemon.types[0].type.name}) 100%)`,
+        boxShadow: `0 10px 20px rgba(0,0,0,0.2),
+                   0 6px 6px rgba(0,0,0,0.1),
+                   inset 0 1px 0 rgba(255,255,255,0.3)`,
+      };
+    }
   };
 
   const padWithLeadingZeros = (num: number, totalLength: number) => {
@@ -90,7 +104,10 @@ type PokemonCard = Omit<Pokemon, 'species'> & { species?: Species | PokemonEntri
     console.warn(`Failed to load image for Pokemon #${props.pokemon.id}`);
   };
 
-  // Removido o watch que causava problemas com shiny mode
+  // Quando a URL muda, reinicia o loading
+  watch(currentImageUrl, () => {
+    cardLoading.value = true;
+  });
 
   const handleMouseMove = (e: MouseEvent) => {
     if (!cardTarget.value) return;
@@ -188,8 +205,8 @@ type PokemonCard = Omit<Pokemon, 'species'> & { species?: Species | PokemonEntri
     v-else
     class="card-tcg"
     ref="cardTarget"
-    v-bind="getTypeAttributes()"
     :style="{
+      ...checkTypes(props.pokemon.types.length),
       transform: isHovered
         ? `translateY(-12px) scale(1.03) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`
         : 'translateY(0) scale(1) rotateX(0deg) rotateY(0deg)'
