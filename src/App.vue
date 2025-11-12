@@ -3,9 +3,9 @@ import Cards from '@/components/Cards/Cards.vue';
 import FavoriteTeam from '@/components/Favorites/FavoriteTeam.vue';
 import ModernFilters from '@/components/Filters/ModernFilters.vue';
 import DarkModeToggle from '@/components/UI/DarkModeToggle.vue';
-import TCGModeToggle from '@/components/UI/TCGModeToggle.vue';
 import LanguageSelector from '@/components/UI/LanguageSelector.vue';
 import LoadingState from '@/components/UI/LoadingState.vue';
+import TCGModeToggle from '@/components/UI/TCGModeToggle.vue';
 import { useUIState } from '@/composables/useUIState';
 import { useModalStore } from '@/stores/Modal';
 import { usePokemonStore } from '@/stores/PokemonStore';
@@ -17,12 +17,18 @@ import Modal from './components/Modal/Modal.vue';
 const { t } = useI18n();
 
   const modalStore = useModalStore();
-  const { isOpen, pokemonData, pokemonId } = storeToRefs(modalStore);
-  
+  const { isOpen } = storeToRefs(modalStore);
+
   const pokemonStore = usePokemonStore();
   const { pokemons, loading, error, hasMore } = storeToRefs(pokemonStore);
 
-  const filters = ref({
+  interface Filters {
+    generation: number;
+    types: string[];
+    searchQuery: string;
+  }
+
+  const filters = ref<Filters>({
     generation: 1,
     types: [],
     searchQuery: ''
@@ -37,24 +43,24 @@ const { t } = useI18n();
   const toggleView = (showFavorites: boolean) => {
     showingFavorites.value = showFavorites;
   };
-  
+
   // Watch para mudanças nos filtros
   watch(
     filters,
-    async (newFilters: any) => {
+    async (newFilters: Filters) => {
       pokemonStore.setGeneration(newFilters.generation);
       pokemonStore.setSelectedTypes(newFilters.types);
       await pokemonStore.setSearchQuery(newFilters.searchQuery);
     },
     { deep: true }
   );
-  
+
   const handleCardClick = (pokemon: any) => {
     modalStore.isOpen = true;
     modalStore.pokemonData = pokemon;
     modalStore.pokemonId = pokemon.id;
   };
-  
+
   const handleFavoriteClick = (pokemon: any) => {
     modalStore.isOpen = true;
     modalStore.pokemonData = pokemon;

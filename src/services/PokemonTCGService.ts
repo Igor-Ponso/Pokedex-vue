@@ -31,7 +31,8 @@ interface TCGResponse {
   totalCount: number;
 }
 
-const API_BASE = 'https://api.pokemontcg.io/v2';
+// Usar proxy em desenvolvimento para evitar CORS
+const API_BASE = import.meta.env.DEV ? '/api/tcg' : 'https://api.pokemontcg.io/v2';
 const API_KEY = import.meta.env.VITE_POKEMON_TCG_API_KEY;
 
 /**
@@ -146,12 +147,14 @@ export async function fetchTCGCardByPokedexNumber(pokedexNumber: number): Promis
   }
 
   try {
-    // Busca cards com o número da pokedex, ordenando por data de release (mais recentes primeiro)
-    // e filtrando por raridades interessantes
-    const query = `nationalPokedexNumbers:${pokedexNumber}`;
-    const url = `${API_BASE}/cards?q=${encodeURIComponent(query)}&orderBy=-set.releaseDate&pageSize=10`;
+    // Busca cards com o número da pokedex
+    // Priorizar Full Art usando query de subtypes
+    const query = `nationalPokedexNumbers:${pokedexNumber} subtypes:"Full Art"`;
+    const fallbackQuery = `nationalPokedexNumbers:${pokedexNumber}`;
 
-    console.log('🎴 Fetching TCG card:', { pokedexNumber, url, hasApiKey: !!API_KEY });
+    let url = `${API_BASE}/cards?q=${encodeURIComponent(query)}&orderBy=-set.releaseDate&pageSize=10`;
+
+    console.log('🎴 Fetching TCG Full Art card:', { pokedexNumber, query, hasApiKey: !!API_KEY });
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 120000); // 120s timeout (API pode ser lenta)
@@ -170,53 +173,91 @@ export async function fetchTCGCardByPokedexNumber(pokedexNumber: number): Promis
       return null;
     }
 
-    const data: TCGResponse = await response.json();
+    let data: TCGResponse = await response.json();
 
+    // Se não encontrar Full Art, tentar buscar sem o filtro
     if (data.data.length === 0) {
-      cardCache.set(pokedexNumber, null);
-      return null;
+      console.log('⚠️ Nenhum Full Art encontrado, buscando outros cards...');
+      url = `${API_BASE}/cards?q=${encodeURIComponent(fallbackQuery)}&orderBy=-set.releaseDate&pageSize=20`;
+
+      const fallbackResponse = await fetch(url, {
+        method: 'GET',
+        headers: getHeaders()
+      });
+
+      if (!fallbackResponse.ok) {
+        cardCache.set(pokedexNumber, null);
+        return null;
+      }
+
+      data = await fallbackResponse.json();
+
+      if (data.data.length === 0) {
+        cardCache.set(pokedexNumber, null);
+        return null;
+      }
     }
 
-    // Prioridade: Illustration Rare > Ultra Rare > Secret Rare > Hyper Rare > Special Illustration Rare
-    // Esses são os cards com melhor artwork
+    // Prioridade: Full Art sempre primeiro (pedido do usuário)
+    // Depois: Illustration Rare > Special Illustration Rare > Ultra Rare > Secret Rare
     const priorityRarities = [
+      'full art',
       'illustration rare',
       'special illustration rare',
       'ultra rare',
       'secret rare',
       'hyper rare',
       'rainbow rare',
-      'full art'
+      'radiant rare',
+      'amazing rare'
     ];
 
-    const premiumCards = data.data.filter(c => {
+    // Função helper para verificar se um card é Full Art
+    const isFullArt = (card: TCGCard): boolean => {
+      const rarity = card.rarity?.toLowerCase() || '';
+      const subtypes = card.subtypes?.map(st => st.toLowerCase()) || [];
+      return subtypes.includes('full art') || rarity.includes('full art');
+    };
+
+    // Separar Full Art cards primeiro
+    const fullArtCards = data.data.filter(isFullArt);
+    const otherCards = data.data.filter(c => !isFullArt(c));
+
+    // Filtrar cards premium dos não-Full Art
+    const premiumNonFullArt = otherCards.filter(c => {
       const rarity = c.rarity?.toLowerCase() || '';
       const subtypes = c.subtypes?.map(st => st.toLowerCase()).join(' ') || '';
       return priorityRarities.some(pr => rarity.includes(pr) || subtypes.includes(pr));
     });
 
-    const cardsToSort = premiumCards.length > 0 ? premiumCards : data.data;
+    // Ordenar cards por prioridade
+    const sortByPriority = (cards: TCGCard[]) => {
+      return cards.sort((a, b) => {
+        const aRarity = a.rarity?.toLowerCase() || '';
+        const bRarity = b.rarity?.toLowerCase() || '';
+        const aSubtypes = a.subtypes?.map(st => st.toLowerCase()).join(' ') || '';
+        const bSubtypes = b.subtypes?.map(st => st.toLowerCase()).join(' ') || '';
 
-    const priorityOrder = priorityRarities;
+        const aText = `${aRarity} ${aSubtypes}`;
+        const bText = `${bRarity} ${bSubtypes}`;
 
-    const sortedCards = cardsToSort.sort((a, b) => {
-      const aRarity = a.rarity?.toLowerCase() || '';
-      const bRarity = b.rarity?.toLowerCase() || '';
-      const aSubtypes = a.subtypes?.map(st => st.toLowerCase()).join(' ') || '';
-      const bSubtypes = b.subtypes?.map(st => st.toLowerCase()).join(' ') || '';
+        const aIndex = priorityRarities.findIndex(r => aText.includes(r));
+        const bIndex = priorityRarities.findIndex(r => bText.includes(r));
 
-      const aText = `${aRarity} ${aSubtypes}`;
-      const bText = `${bRarity} ${bSubtypes}`;
+        if (aIndex === -1 && bIndex === -1) return 0;
+        if (aIndex === -1) return 1;
+        if (bIndex === -1) return -1;
 
-      const aIndex = priorityOrder.findIndex(r => aText.includes(r));
-      const bIndex = priorityOrder.findIndex(r => bText.includes(r));
+        return aIndex - bIndex;
+      });
+    };
 
-      if (aIndex === -1 && bIndex === -1) return 0;
-      if (aIndex === -1) return 1;
-      if (bIndex === -1) return -1;
+    // Full Art tem prioridade máxima
+    const sortedFullArt = sortByPriority(fullArtCards);
+    const sortedPremium = sortByPriority(premiumNonFullArt);
 
-      return aIndex - bIndex;
-    });
+    // Combinar: Full Art primeiro, depois premium, depois o resto
+    const sortedCards = [...sortedFullArt, ...sortedPremium, ...otherCards.filter(c => !premiumNonFullArt.includes(c))];
 
     const card = sortedCards[0];
     cardCache.set(pokedexNumber, card);
@@ -262,11 +303,24 @@ export async function fetchTCGCardsByRange(start: number, end: number): Promise<
   console.log(`🎴 Buscando ${missingIds.length} TCG cards faltantes de ${end - start + 1} total (${start}-${end})`);
 
   try {
+    // Se não houver API key, marcar todos como null
+    if (!API_KEY) {
+      console.warn('⚠️ Pokemon TCG API key não configurada. Configure VITE_POKEMON_TCG_API_KEY no arquivo .env');
+      missingIds.forEach(id => {
+        cardCache.set(id, null);
+        results.set(id, null);
+      });
+      return results;
+    }
+
     // Busca todos os cards dos Pokemon no range
-    const query = `nationalPokedexNumbers:[${start} TO ${end}]`;
+    // Para Pokemon 1-151, priorizar a edição "151" (sv3pt5)
+    const isGen1 = start >= 1 && end <= 151;
+    const setFilter = isGen1 ? ' set.id:sv3pt5' : '';
+    const query = `nationalPokedexNumbers:[${start} TO ${end}]${setFilter}`;
     const url = `${API_BASE}/cards?q=${encodeURIComponent(query)}&orderBy=-set.releaseDate&pageSize=250`;
 
-    console.log('🎴 Fetching TCG cards batch:', { start, end, url, hasApiKey: !!API_KEY });
+    console.log('🎴 Fetching TCG cards batch:', { start, end, isGen1, setFilter, url, hasApiKey: !!API_KEY });
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 120000); // 120s timeout
@@ -279,7 +333,12 @@ export async function fetchTCGCardsByRange(start: number, end: number): Promise<
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.warn(`Failed to fetch TCG cards for range ${start}-${end}`);
+      const errorText = await response.text();
+      console.warn(`Failed to fetch TCG cards for range ${start}-${end}`, {
+        status: response.status,
+        statusText: response.statusText,
+        error: errorText
+      });
       // Marcar IDs faltantes como null no cache para evitar chamadas repetidas
       missingIds.forEach(id => {
         cardCache.set(id, null);
@@ -303,38 +362,90 @@ export async function fetchTCGCardsByRange(start: number, end: number): Promise<
       }
     });
 
-    // Para cada Pokemon, seleciona o melhor card
-    const priorityOrder = ['rare holo', 'rare ultra', 'rare secret', 'rare rainbow', 'rare'];
+    // Para cada Pokemon, seleciona o melhor card (Full Art tem prioridade)
+    const priorityOrder = [
+      'full art',
+      'illustration rare',
+      'special illustration rare',
+      'ultra rare',
+      'secret rare',
+      'hyper rare',
+      'rainbow rare',
+      'radiant rare',
+      'amazing rare',
+      'rare holo'
+    ];
+
+    // Função helper para verificar Full Art
+    const isFullArt = (card: TCGCard): boolean => {
+      const rarity = card.rarity?.toLowerCase() || '';
+      const subtypes = card.subtypes?.map(st => st.toLowerCase()) || [];
+      return subtypes.includes('full art') || rarity.includes('full art');
+    };
 
     cardsByPokemon.forEach((cards, pokedexNum) => {
-      const sortedCards = cards.sort((a, b) => {
-        const aRarity = a.rarity?.toLowerCase() || '';
-        const bRarity = b.rarity?.toLowerCase() || '';
+      // Separar Full Art primeiro
+      const fullArtCards = cards.filter(isFullArt);
+      const otherCards = cards.filter(c => !isFullArt(c));
 
-        const aIndex = priorityOrder.findIndex(r => aRarity.includes(r));
-        const bIndex = priorityOrder.findIndex(r => bRarity.includes(r));
+      const sortByPriority = (cardsToSort: TCGCard[]) => {
+        return cardsToSort.sort((a, b) => {
+          const aRarity = a.rarity?.toLowerCase() || '';
+          const bRarity = b.rarity?.toLowerCase() || '';
+          const aSubtypes = a.subtypes?.map(st => st.toLowerCase()).join(' ') || '';
+          const bSubtypes = b.subtypes?.map(st => st.toLowerCase()).join(' ') || '';
 
-        if (aIndex === -1 && bIndex === -1) return 0;
-        if (aIndex === -1) return 1;
-        if (bIndex === -1) return -1;
+          const aText = `${aRarity} ${aSubtypes}`;
+          const bText = `${bRarity} ${bSubtypes}`;
 
-        return aIndex - bIndex;
-      });
+          const aIndex = priorityOrder.findIndex(r => aText.includes(r));
+          const bIndex = priorityOrder.findIndex(r => bText.includes(r));
 
-      const bestCard = sortedCards[0];
+          if (aIndex === -1 && bIndex === -1) return 0;
+          if (aIndex === -1) return 1;
+          if (bIndex === -1) return -1;
+
+          return aIndex - bIndex;
+        });
+      };
+
+      // Prioridade: Full Art > Premium > Resto
+      const sortedFullArt = sortByPriority(fullArtCards);
+      const sortedOther = sortByPriority(otherCards);
+      const allSorted = [...sortedFullArt, ...sortedOther];
+
+      const bestCard = allSorted[0];
       results.set(pokedexNum, bestCard);
       cardCache.set(pokedexNum, bestCard);
+    });
+
+    // Marcar IDs que não encontraram cards como null
+    missingIds.forEach(id => {
+      if (!results.has(id)) {
+        results.set(id, null);
+        cardCache.set(id, null);
+      }
     });
 
     // Salvar cache no localStorage em background
     setTimeout(() => saveCacheToStorage(), 1000);
 
-    console.log(`✅ TCG batch completo: ${results.size} cards encontrados`);
+    const foundCount = Array.from(results.values()).filter(c => c !== null).length;
+    console.log(`✅ TCG batch completo: ${foundCount} cards encontrados de ${results.size} Pokemon`);
 
     return results;
 
-  } catch (error) {
-    console.error(`Error fetching TCG cards for range ${start}-${end}:`, error);
+  } catch (error: any) {
+    console.error(`Error fetching TCG cards for range ${start}-${end}:`, {
+      message: error?.message,
+      name: error?.name,
+      error
+    });
+    // Marcar IDs faltantes como null no cache para evitar chamadas repetidas
+    missingIds.forEach(id => {
+      cardCache.set(id, null);
+      results.set(id, null);
+    });
     return results;
   }
 }

@@ -1,10 +1,11 @@
 import { OhVueIcon, addIcons } from "oh-vue-icons";
-import { BiStars, BiHeart, BiHeartFill } from "oh-vue-icons/icons";
+import { BiStars, BiHeart, BiHeartFill, BiArrowsAngleExpand } from "oh-vue-icons/icons";
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
 import { createI18n } from 'vue-i18n';
 import type { PluginOptions } from 'vue-toastification';
-import Toast, { POSITION } from 'vue-toastification';
+import Toast from 'vue-toastification';
+import { POSITION } from 'vue-toastification';
 import App from './App.vue';
 
 
@@ -14,11 +15,11 @@ import '@/style.css';
 import '@/assets/styles/dark-mode.css';
 import 'vue-toastification/dist/index.css';
 
-addIcons(BiStars, BiHeart, BiHeartFill);
+addIcons(BiStars, BiHeart, BiHeartFill, BiArrowsAngleExpand);
 
 
-import en from './locales/en.json';
-import pt from './locales/pt.json';
+import en from './locales/en.json' with { type: 'json' };
+import pt from './locales/pt.json' with { type: 'json' };
 
 // Detecta o idioma do navegador
 const getBrowserLanguage = (): string => {

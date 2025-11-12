@@ -16,8 +16,12 @@
 
   // Glass Morphism Effect leve para não perder as cores
   backdrop-filter blur(8px) saturate(150%)
-  border 2px solid rgba(255, 255, 255, 0.25)
-  box-shadow 0 20px 50px rgba(0, 0, 0, 0.4), 0 10px 25px rgba(0, 0, 0, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.3), inset 0 -1px 2px rgba(0, 0, 0, 0.2)
+  // Golden border effect (TCG card style)
+  border 3px solid transparent
+  background-image linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), linear-gradient(135deg, hsl(47, 100%, 78%) 0%, hsl(47, 100%, 88%) 25%, hsl(47, 100%, 78%) 50%, hsl(47, 100%, 68%) 75%, hsl(47, 100%, 78%) 100%)
+  background-origin border-box
+  background-clip padding-box, border-box
+  box-shadow 0 20px 50px rgba(0, 0, 0, 0.4), 0 10px 25px rgba(0, 0, 0, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.3), inset 0 -1px 2px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 215, 0, 0.2)
   transform-style preserve-3d
   perspective 1000px
 
@@ -214,8 +218,9 @@
     z-index 2
 
   &.hovered
-    border-color rgba(255, 255, 255, 0.4)
-    box-shadow 0 30px 70px rgba(0, 0, 0, 0.5), 0 15px 35px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.4), inset 0 -2px 4px rgba(0, 0, 0, 0.2)
+    // Enhanced golden border on hover
+    background-image linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), linear-gradient(135deg, hsl(47, 100%, 88%) 0%, hsl(47, 100%, 98%) 25%, hsl(47, 100%, 88%) 50%, hsl(47, 100%, 78%) 75%, hsl(47, 100%, 88%) 100%)
+    box-shadow 0 30px 70px rgba(0, 0, 0, 0.5), 0 15px 35px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.4), inset 0 -2px 4px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.3)
 
     &::after
       opacity 0.5
@@ -227,21 +232,31 @@
       opacity 0.8
 
     .holo-effect
-      opacity 1
+      opacity 0.6
 
   &.shiny
     animation shiny-pulse 2s ease-in-out infinite
     border-color rgba(255, 215, 0, 0.6)
     box-shadow 0 0 30px rgba(255, 215, 0, 0.5), 0 20px 50px rgba(0, 0, 0, 0.4), 0 10px 25px rgba(0, 0, 0, 0.25)
 
-// Border holográfico
+// Border holográfico interno
 .tcg-border
   position absolute
-  inset 3px
+  inset 5px
   border-radius 1.8rem
-  border 1px solid rgba(255, 255, 255, 0.15)
+  border 1px solid rgba(255, 255, 255, 0.2)
   pointer-events none
   z-index 3
+
+  // Inner glow effect
+  &::before
+    content ''
+    position absolute
+    inset -1px
+    border-radius inherit
+    background linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent 50%, rgba(255, 255, 255, 0.1))
+    opacity 0.5
+    pointer-events none
 
 .card-back-overlay
   position absolute
@@ -314,6 +329,7 @@
     object-fit contain
     filter drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3))
     transition transform 0.4s ease
+    transform translateZ(0.01px)
     z-index 5
 
 .image-glow
@@ -461,62 +477,181 @@
       top 50%
       left 5%
 
-// Holo wrapper
+// Holo wrapper - Advanced Ultra Rare Full Art holofoil effect (baseado em pokemon-cards-css)
 .holo-wrapper
   position absolute
   inset 0
-  border-radius 2rem
+  border-radius 1.2rem
   overflow hidden
   pointer-events none
   z-index 8
-  mix-blend-mode screen
 
+  // Sparkle/Glitter layer - dots que criam efeito de glitter
   .holo-sparkle
     position absolute
     inset 0
-    background-image radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px), radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 1px)
-    background-size 50px 50px, 80px 80px
-    background-position 0 0, 40px 60px
-    opacity 0.15
-    animation sparkle-move 20s linear infinite
+    background url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48ZmlsdGVyIGlkPSJnbG93Ij48ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSIyIi8+PC9maWx0ZXI+PC9kZWZzPjxjaXJjbGUgY3g9IjEwIiBjeT0iMTAiIHI9IjEuNSIgZmlsbD0id2hpdGUiIGZpbHRlcj0idXJsKCNnbG93KSIgb3BhY2l0eT0iMC44Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMiIgZmlsbD0id2hpdGUiIGZpbHRlcj0idXJsKCNnbG93KSIgb3BhY2l0eT0iMC45Ii8+PGNpcmNsZSBjeD0iOTAiIGN5PSIzMCIgcj0iMS41IiBmaWxsPSJ3aGl0ZSIgZmlsdGVyPSJ1cmwoI2dsb3cpIiBvcGFjaXR5PSIwLjciLz48Y2lyY2xlIGN4PSIzMCIgY3k9IjcwIiByPSIxIiBmaWxsPSJ3aGl0ZSIgZmlsdGVyPSJ1cmwoI2dsb3cpIiBvcGFjaXR5PSIwLjYiLz48Y2lyY2xlIGN4PSI3MCIgY3k9IjkwIiByPSIxLjUiIGZpbGw9IndoaXRlIiBmaWx0ZXI9InVybCgjZ2xvdykiIG9wYWNpdHk9IjAuOCIvPjwvc3ZnPg==')
+    background-size 100px 100px
+    background-position var(--holo-x, 50%) var(--holo-y, 50%)
+    opacity 0.4
+    mix-blend-mode screen
+    animation sparkle-twinkle 3s ease-in-out infinite
+    z-index 3
 
+  // Main holo effect - Rainbow sunpillar with metallic bars (card__shine)
   .holo-effect
     position absolute
     inset 0
-    opacity 0.4
+    opacity 0.7
     transition opacity 0.3s ease
+    transform translateZ(1px)
+    z-index 1
 
+    // Layer 1: Sunpillar rainbow gradient + metallic bars
+    background-image repeating-linear-gradient(
+        0deg,
+        hsl(283, 100%, 73%) 5%,
+        hsl(2, 100%, 73%) 10%,
+        hsl(53, 100%, 69%) 15%,
+        hsl(93, 100%, 69%) 20%,
+        hsl(176, 100%, 76%) 25%,
+        hsl(228, 100%, 74%) 30%,
+        hsl(283, 100%, 73%) 35%
+      ),
+      repeating-linear-gradient(
+        133deg,
+        #0e152e 0%,
+        hsl(180, 10%, 60%) 3.8%,
+        hsl(180, 29%, 66%) 4.5%,
+        hsl(180, 10%, 60%) 5.2%,
+        #0e152e 10%,
+        #0e152e 12%
+      ),
+      radial-gradient(
+        farthest-corner circle at var(--holo-x, 50%) var(--holo-y, 50%),
+        hsla(0, 0%, 0%, 0.1) 12%,
+        hsla(0, 0%, 0%, 0.15) 20%,
+        hsla(0, 0%, 0%, 0.25) 120%
+      )
+
+    background-position center center,
+      0% calc(var(--holo-y, 50%)),
+      calc(var(--holo-x, 50%) + (var(--holo-y, 50%) * 0.2)) var(--holo-y, 50%),
+      var(--holo-x, 50%) var(--holo-y, 50%)
+
+    background-blend-mode soft-light, hue, hard-light
+    background-size 200% 700%, 300% 100%, 200% 100%
+
+    filter brightness(calc((var(--pointer-from-center, 0.5) * 0.4) + 0.4)) contrast(1.4) saturate(2.25)
+    mix-blend-mode color-dodge
+
+    // Layer 2: Inverted effect for depth
+    &::after
+      content ''
+      position absolute
+      inset 0
+      transform translateZ(1.2px)
+      background-image repeating-linear-gradient(
+          0deg,
+          hsl(228, 100%, 74%) 5%,
+          hsl(283, 100%, 73%) 10%,
+          hsl(2, 100%, 73%) 15%,
+          hsl(53, 100%, 69%) 20%,
+          hsl(93, 100%, 69%) 25%,
+          hsl(176, 100%, 76%) 30%,
+          hsl(228, 100%, 74%) 35%
+        ),
+        repeating-linear-gradient(
+          133deg,
+          #0e152e 0%,
+          hsl(180, 10%, 60%) 3.8%,
+          hsl(180, 29%, 66%) 4.5%,
+          hsl(180, 10%, 60%) 5.2%,
+          #0e152e 10%,
+          #0e152e 12%
+        )
+
+      background-position center center,
+        0% calc(var(--holo-y, 50%)),
+        calc((var(--holo-x, 50%) + (var(--holo-y, 50%) * 0.2)) * -1) calc(var(--holo-y, 50%) * -1)
+
+      background-size 200% 400%, 195% 100%, 200% 100%
+
+      filter brightness(calc((var(--pointer-from-center, 0.5) * 0.4) + 0.8)) contrast(1.5) saturate(1.25)
+      mix-blend-mode exclusion
+      opacity 0.5
+
+  // Rainbow sweep effect (adicional, não estava no original mas melhora)
   .holo-rainbow
     position absolute
     inset 0
-    background linear-gradient(115deg, transparent 0%, rgba(255,0,255,0.3) 25%, transparent 47%, transparent 53%, rgba(0,255,255,0.3) 75%, transparent 100%)
-    background-size 200% 200%
-    opacity 0.2
-    filter blur(8px)
+    transform translateZ(1.3px)
+    z-index 2
+    background linear-gradient(
+      calc(var(--holo-x, 50%) * 3.6deg),
+      transparent 0%,
+      rgba(255, 0, 255, 0.2) 25%,
+      rgba(0, 255, 255, 0.2) 50%,
+      rgba(255, 255, 0, 0.2) 75%,
+      transparent 100%
+    )
+    background-size 300% 300%
+    background-position calc(var(--holo-x, 50%) * 1.5) calc(var(--holo-y, 50%) * 1.5)
+    opacity 0.4
+    filter blur(15px)
+    mix-blend-mode color-dodge
+
+  // Glare/Light reflection layer (card__glare - deve ficar por último, em cima de tudo)
+  &::before
+    content ''
+    position absolute
+    inset 0
+    transform translateZ(1.5px)
+    z-index 4
+    background-image radial-gradient(
+      farthest-corner circle at var(--holo-x, 50%) var(--holo-y, 50%),
+      hsl(0, 0%, 75%) 5%,
+      hsl(200, 5%, 35%) 60%,
+      hsl(320, 40%, 10%) 150%
+    )
+    background-size 120% 150%
+    background-position center center
+    mix-blend-mode hard-light
+    filter brightness(1) contrast(1.2) saturate(1)
+    opacity calc(var(--pointer-from-center, 0.5) * 0.75)
 
 // TCG Card Wrapper (para cards oficiais)
 .tcg-card-wrapper
   position relative
-  width 16rem
-  height 24rem
+  width 16rem  // Mesmo tamanho do card Pokedex
+  height 24rem // Mesmo tamanho do card Pokedex
   cursor pointer
-  transition all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+  transition transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.6s ease
   transform-style preserve-3d
-  perspective 1000px
-  border-radius 1rem
+  perspective 1200px
+  will-change transform
+  border-radius 1.2rem // Mesmoarredondamento da imagem
   overflow visible
+  display flex
+  align-items center
+  justify-content center
 
   &.hovered
+    box-shadow 0 30px 60px -12px rgba(0, 0, 0, 0.5),
+               0 18px 36px -18px rgba(0, 0, 0, 0.4),
+               0 0 40px rgba(255, 255, 255, 0.1)
     .tcg-card-image
-      filter brightness(1.05) contrast(1.02)
+      filter brightness(1.08) contrast(1.05)
 
   .tcg-card-image
     width 100%
     height 100%
     object-fit cover
     border-radius 1.2rem
-    transition all 0.3s ease
+    transition filter 0.3s ease
+    transform translateZ(0.01px)
     box-shadow 0 20px 50px rgba(0, 0, 0, 0.5), 0 10px 25px rgba(0, 0, 0, 0.3)
+    z-index 1
 
   .card-actions-overlay
     position absolute
@@ -525,6 +660,49 @@
     display flex
     gap 0.5rem
     z-index 10
+
+  // Botões de ação sempre visíveis em TCG mode
+  .card-actions-overlay .action-btn
+    opacity 0.7
+    transition all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+
+    &:hover
+      opacity 1
+      transform scale(1.1)
+
+  // Botão de expansão (canto inferior direito)
+  .expand-btn
+    position absolute
+    bottom 1rem
+    right 1rem
+    width 3rem
+    height 3rem
+    border-radius 50%
+    border none
+    display flex
+    justify-content center
+    align-items center
+    background rgba(0, 0, 0, 0.6)
+    backdrop-filter blur(15px)
+    border 2px solid rgba(255, 255, 255, 0.4)
+    cursor pointer
+    transition all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+    z-index 15
+    opacity 0.7
+    transform scale(1)
+
+    &:hover
+      background rgba(255, 255, 255, 0.3)
+      transform scale(1.1)
+      border-color rgba(255, 255, 255, 0.7)
+      box-shadow 0 0 20px rgba(255, 255, 255, 0.5)
+      opacity 1
+
+  &.hovered .expand-btn
+    opacity 1
+
+  &.hovered .card-actions-overlay .action-btn
+    opacity 1
 
 // Animações
 @keyframes shiny-pulse
@@ -550,3 +728,29 @@
     transform translate(0, 0)
   100%
     transform translate(50px, 50px)
+
+@keyframes sparkle-twinkle
+  0%, 100%
+    opacity 0.3
+    transform scale(1)
+  50%
+    opacity 0.6
+    transform scale(1.2)
+
+@keyframes rainbow-shift
+  0%
+    background-position 0% 50%
+    filter blur(12px) hue-rotate(0deg)
+  50%
+    background-position 100% 50%
+    filter blur(15px) hue-rotate(45deg)
+  100%
+    background-position 0% 50%
+    filter blur(12px) hue-rotate(0deg)
+
+// Clickable area for opening modal (doesn't interfere with buttons)
+.card-clickable-area
+  position absolute
+  inset 0
+  z-index 9
+  cursor pointer

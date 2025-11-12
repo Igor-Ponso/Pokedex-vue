@@ -5,32 +5,46 @@
    * @see App
    * @version 1.0.0
    */
-  import ImageWithSkeleton from '@/components/UI/ImageWithSkeleton.vue';
+  import TCGCardModal from '@/components/Modal/TCGCardModal.vue';
+import ImageWithSkeleton from '@/components/UI/ImageWithSkeleton.vue';
 import PokemonCardBack from '@/components/UI/PokemonCardBack.vue';
-import { Pokemon, Species } from '@/interfaces/Pokemon';
+import { Species } from '@/interfaces/Pokemon';
 import type { PokemonEntries } from '@/interfaces/PokemonEntries';
+import type { TCGCard } from '@/services/PokemonTCGService';
 import { usePokemonStore } from '@/stores/PokemonStore';
 import { storeToRefs } from 'pinia';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
-// Tipo mais flexível para o card: não exige species completa e permite species detalhada opcional
-// Aceita tanto o formato básico (Species) quanto o detalhado (PokemonEntries) e torna opcional
-type PokemonCard = Omit<Pokemon, 'species'> & { species?: Species | PokemonEntries };
+// Interface mínima necessária para evitar erro de atribuição do TS ao passar objetos do store.
+// O objeto completo de Pokemon possui campos extras que serão ignorados conforme checagem estrutural.
+interface PokemonCardMinimal {
+  id: number;
+  name: string;
+  types: { slot: number; type: { name: string; url: string } }[];
+  sprites: { other: { 'official-artwork': { front_default: string } } };
+  stats: { base_stat: number; stat: { name: string; url: string } }[];
+  tcgCard?: TCGCard; // usar interface completa para compatibilidade com modal
+  species?: Species | PokemonEntries;
+  [key: string]: any; // tolera campos adicionais (abilities, moves, etc.)
+}
+type PokemonCard = PokemonCardMinimal;
 
-  const props = defineProps<{
-    pokemon: PokemonCard;
-  }>();
+  const props = defineProps<{ pokemon: PokemonCard }>();
+
+  // Define o evento click para evitar warning de Vue
+  const emit = defineEmits<{ click: [pokemon: PokemonCard] }>();
 
   const pokemonStore = usePokemonStore();
   const { tcgMode } = storeToRefs(pokemonStore);
 
-  const cardLoading = ref(false);
+  const cardLoading = ref(false); // Apenas para carregamento inicial, não para trocas de sprite
 
   onMounted(() => {
     isFavorite.value = pokemonStore.isFavorite(props.pokemon.id);
   });
 
   // Pré-carrega todos os ícones de tipo existentes (evita 404 em produção e facilita fallback)
+  // @ts-ignore Vite ESM build supports import.meta.glob; suppress TS CommonJS warning
   const typeIcons = import.meta.glob('@/assets/svgs/type/*.svg', { eager: true, import: 'default' }) as Record<string, string>;
 
   const pokemonTypePath = (type_name: string) => {
@@ -75,10 +89,20 @@ type PokemonCard = Omit<Pokemon, 'species'> & { species?: Species | PokemonEntri
   const holoY = ref(50);
   const rotateX = ref(0);
   const rotateY = ref(0);
+  const pointerFromCenter = ref(0.5);
+  const showTCGModal = ref(false);
 
   const toggleFavorite = () => {
     pokemonStore.toggleFavorite(props.pokemon.id);
     isFavorite.value = pokemonStore.isFavorite(props.pokemon.id);
+  };
+
+  const expandCard = () => {
+    showTCGModal.value = true;
+  };
+
+  const closeTCGModal = () => {
+    showTCGModal.value = false;
   };
 
   // URL da imagem atual
@@ -104,10 +128,8 @@ type PokemonCard = Omit<Pokemon, 'species'> & { species?: Species | PokemonEntri
     console.warn(`Failed to load image for Pokemon #${props.pokemon.id}`);
   };
 
-  // Quando a URL muda, reinicia o loading
-  watch(currentImageUrl, () => {
-    cardLoading.value = true;
-  });
+  // Removido: ImageWithSkeleton já controla o loading
+  // O cardLoading agora é usado apenas para o carregamento inicial
 
   const handleMouseMove = (e: MouseEvent) => {
     if (!cardTarget.value) return;
@@ -120,11 +142,16 @@ type PokemonCard = Omit<Pokemon, 'species'> & { species?: Species | PokemonEntri
     holoX.value = (x / rect.width) * 100;
     holoY.value = (y / rect.height) * 100;
 
-    // Calcula rotação 3D baseado na posição do mouse
+    // Calcula rotação 3D baseado na posição do mouse (aumentado para movimento mais pronunciado)
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    rotateY.value = ((x - centerX) / centerX) * 10; // -10 a 10 graus
-    rotateX.value = ((centerY - y) / centerY) * 10; // -10 a 10 graus
+    rotateY.value = ((x - centerX) / centerX) * 18; // -18 a 18 graus (aumentado de 10)
+    rotateX.value = ((centerY - y) / centerY) * 18; // -18 a 18 graus (aumentado de 10)
+
+    // Calcula distância do centro (para efeitos holográficos)
+    const deltaX = (holoX.value - 50) / 50;
+    const deltaY = (holoY.value - 50) / 50;
+    pointerFromCenter.value = Math.min(Math.sqrt(deltaX * deltaX + deltaY * deltaY), 1);
   };
 
   const handleMouseLeave = () => {
@@ -137,14 +164,15 @@ type PokemonCard = Omit<Pokemon, 'species'> & { species?: Species | PokemonEntri
 </script>
 
 <template>
-  <!-- TCG Card Oficial (quando TCG mode ativo, disponível e não estiver em shiny mode) -->
+  <!-- TCG Card Oficial (quando TCG mode ativo e disponível) -->
   <div
-    v-if="tcgMode && props.pokemon.tcgCard && !shinyForm"
+    v-if="tcgMode && props.pokemon.tcgCard"
     class="tcg-card-wrapper"
     ref="cardTarget"
     @mouseenter="isHovered = true"
     @mouseleave="handleMouseLeave"
     @mousemove="handleMouseMove"
+    @click="expandCard"
     :class="{ hovered: isHovered, loading: cardLoading }"
     :style="{
       transform: isHovered
@@ -157,11 +185,8 @@ type PokemonCard = Omit<Pokemon, 'species'> & { species?: Species | PokemonEntri
       <PokemonCardBack />
     </div>
 
-    <!-- Botões de ação sobre o card TCG -->
+    <!-- Botão de favorito (único botão em TCG mode) -->
     <div class="card-actions-overlay">
-      <button class="action-btn shiny-btn" @click.stop="shinyForm = !shinyForm">
-        <v-icon name="bi-stars" fill="white" />
-      </button>
       <button class="action-btn favorite-btn" @click.stop="toggleFavorite" :class="{ active: isFavorite }">
         <v-icon :name="isFavorite ? 'bi-heart-fill' : 'bi-heart'" fill="white" />
       </button>
@@ -178,25 +203,18 @@ type PokemonCard = Omit<Pokemon, 'species'> & { species?: Species | PokemonEntri
     />
 
     <!-- Efeito holográfico sobre o card TCG -->
-    <div class="holo-wrapper" v-if="isHovered && !cardLoading">
-      <div class="holo-sparkle" :style="{ backgroundPosition: `${holoX}% ${holoY}%` }"></div>
-      <div
-        class="holo-effect"
-        :style="{
-          background: `
-            radial-gradient(
-              circle 800px at ${holoX}% ${holoY}%,
-              rgba(255, 0, 255, 0.4) 0%,
-              rgba(0, 255, 255, 0.3) 20%,
-              rgba(255, 255, 0, 0.3) 40%,
-              rgba(255, 0, 127, 0.3) 60%,
-              rgba(0, 255, 255, 0.2) 80%,
-              transparent 100%
-            )
-          `
-        }"
-      ></div>
-      <div class="holo-rainbow" :style="{ backgroundPosition: `${holoX * 2}% ${holoY * 2}%` }"></div>
+    <div
+      class="holo-wrapper"
+      v-if="isHovered && !cardLoading"
+      :style="{
+        '--holo-x': `${holoX}%`,
+        '--holo-y': `${holoY}%`,
+        '--pointer-from-center': pointerFromCenter
+      }"
+    >
+      <div class="holo-sparkle"></div>
+      <div class="holo-effect"></div>
+      <div class="holo-rainbow"></div>
     </div>
   </div>
 
@@ -214,7 +232,7 @@ type PokemonCard = Omit<Pokemon, 'species'> & { species?: Species | PokemonEntri
     @mouseenter="isHovered = true"
     @mouseleave="handleMouseLeave"
     @mousemove="handleMouseMove"
-    :class="{ shiny: shinyForm, hovered: isHovered, loading: cardLoading }"
+    :class="{ shiny: shinyForm, hovered: isHovered, loading: cardLoading, clickable: true }"
   >
     <!-- Card back durante loading -->
     <div v-if="cardLoading" class="card-back-overlay">
@@ -246,6 +264,9 @@ type PokemonCard = Omit<Pokemon, 'species'> & { species?: Species | PokemonEntri
         </button>
       </div>
     </div>
+
+    <!-- Área clicável para abrir o modal (não interfere com os botões) -->
+    <div class="card-clickable-area" @click="emit('click', props.pokemon)"></div>
 
     <!-- Imagem do Pokémon com loading -->
     <div class="pokemon-image-container">
@@ -291,43 +312,15 @@ type PokemonCard = Omit<Pokemon, 'species'> & { species?: Species | PokemonEntri
       </div>
     </div>
 
-    <!-- Efeito holográfico Full Art com múltiplas camadas -->
-    <div class="holo-wrapper" v-if="isHovered">
-      <!-- Camada de sparkle/glitter -->
-      <div
-        class="holo-sparkle"
-        :style="{
-          backgroundPosition: `${holoX}% ${holoY}%`
-        }"
-      ></div>
-
-      <!-- Camada principal holográfica -->
-      <div
-        class="holo-effect"
-        :style="{
-          background: `
-            radial-gradient(
-              circle 800px at ${holoX}% ${holoY}%,
-              rgba(255, 0, 255, 0.4) 0%,
-              rgba(0, 255, 255, 0.3) 20%,
-              rgba(255, 255, 0, 0.3) 40%,
-              rgba(255, 0, 127, 0.3) 60%,
-              rgba(0, 255, 255, 0.2) 80%,
-              transparent 100%
-            )
-          `
-        }"
-      ></div>
-
-      <!-- Camada de rainbow gradient -->
-      <div
-        class="holo-rainbow"
-        :style="{
-          backgroundPosition: `${holoX * 2}% ${holoY * 2}%`
-        }"
-      ></div>
-    </div>
   </div>
+
+  <!-- Modal de expansão do card TCG -->
+  <TCGCardModal
+    v-if="showTCGModal && props.pokemon.tcgCard"
+    :card="props.pokemon.tcgCard"
+    :pokemon-name="props.pokemon.name"
+    @close="closeTCGModal"
+  />
 </template>
 
 <style src="./CardStyles.stylus" scoped lang="stylus"></style>

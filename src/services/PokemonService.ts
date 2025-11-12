@@ -156,7 +156,7 @@ class PokemonService {
     });
 
     const pokemons = await Promise.all(pokemonPromises);
-    return pokemons.filter((p): p is Pokemon => p !== null);
+    return pokemons.filter((p: Pokemon | null): p is Pokemon => p !== null);
   }
 
   async searchPokemons(query: string): Promise<Pokemon[]> {
@@ -169,17 +169,17 @@ class PokemonService {
         `/pokemon?limit=1000`
       );
       
-      const filtered = response.data.results.filter((pokemon) =>
+      const filtered = response.data.results.filter((pokemon: PokemonListItem) =>
         pokemon.name.toLowerCase().includes(query.toLowerCase())
       );
 
-      const pokemonPromises = filtered.slice(0, 20).map((item) => {
+      const pokemonPromises = filtered.slice(0, 20).map((item: PokemonListItem) => {
         const id = parseInt(item.url.split('/').filter(Boolean).pop() || '0');
         return this.getPokemonById(id);
       });
 
       const pokemons = await Promise.all(pokemonPromises);
-      return pokemons.filter((p): p is Pokemon => p !== null);
+      return pokemons.filter((p: Pokemon | null): p is Pokemon => p !== null);
     } catch (error: any) {
   useAppToast().error(`Erro ao buscar pokémons: ${error?.message}`);
       return [];

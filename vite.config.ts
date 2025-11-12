@@ -1,8 +1,8 @@
-import vue from '@vitejs/plugin-vue';
-import { defineConfig } from 'vite';
-import { fileURLToPath, URL } from 'url';
-import path from 'node:path';
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
+import vue from "@vitejs/plugin-vue";
+import path from 'node:path';
+import { fileURLToPath, URL } from 'url';
+import { defineConfig } from 'vite';
 import VueDevTools from 'vite-plugin-vue-devtools';
 
 export default defineConfig({
@@ -30,6 +30,24 @@ export default defineConfig({
     port: 8000,
     open: false,
     cors: true,
+    proxy: {
+      '/api/tcg': {
+        target: 'https://api.pokemontcg.io/v2',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/tcg/, ''),
+        configure: (proxy, _options) => {
+          proxy.on('error', (err, _req, _res) => {
+            console.log('proxy error', err);
+          });
+          proxy.on('proxyReq', (proxyReq, req, _res) => {
+            console.log('Sending Request to the Target:', req.method, req.url);
+          });
+          proxy.on('proxyRes', (proxyRes, req, _res) => {
+            console.log('Received Response from the Target:', proxyRes.statusCode, req.url);
+          });
+        },
+      },
+    },
   },
   optimizeDeps: {
     exclude: ['oh-vue-icons/icons'],

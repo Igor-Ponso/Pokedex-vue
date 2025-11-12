@@ -18,7 +18,7 @@ export const usePokemonStore = defineStore('pokemon', () => {
   const searchQuery = ref('');
   const selectedTypes = ref<string[]>([]);
   const favorites = ref<number[]>([]);
-  const tcgMode = ref(false); // Modo TCG desativado por padrão (Pokedex mode)
+  const tcgMode = ref(false); // Modo Pokedex ativo por padrão
 
   // Paginação
   const offset = ref(0);
@@ -43,7 +43,7 @@ export const usePokemonStore = defineStore('pokemon', () => {
     // Filtrar por tipos
     if (selectedTypes.value.length > 0) {
       filtered = filtered.filter(pokemon =>
-        pokemon.types.some(type => selectedTypes.value.includes(type.type.name))
+        pokemon.types.some((type: { slot: number; type: { name: string; url: string } }) => selectedTypes.value.includes(type.type.name))
       );
     }
     
@@ -110,9 +110,9 @@ export const usePokemonStore = defineStore('pokemon', () => {
         return;
       }
 
-      // Buscar TCG cards em batch se modo TCG estiver ativo E for Gen 1
-      if (tcgMode.value && newPokemons.length > 0 && newPokemons[0].id <= 151) {
-        const pokemonIds = newPokemons.map(p => p.id);
+      // Buscar TCG cards em batch se modo TCG estiver ativo
+      if (tcgMode.value && newPokemons.length > 0) {
+        const pokemonIds = newPokemons.map((p: Pokemon) => p.id);
         const start = Math.min(...pokemonIds);
         const end = Math.max(...pokemonIds);
 
@@ -192,24 +192,21 @@ export const usePokemonStore = defineStore('pokemon', () => {
     try {
       const searchResults = await pokemonService.searchPokemons(query);
 
-      // Buscar TCG cards em batch se modo TCG estiver ativo E houver Pokemon Gen 1
+      // Buscar TCG cards em batch se modo TCG estiver ativo
       if (tcgMode.value && searchResults.length > 0) {
-        const gen1Pokemon = searchResults.filter(p => p.id <= 151);
-        if (gen1Pokemon.length > 0) {
-          const pokemonIds = gen1Pokemon.map(p => p.id);
-          const start = Math.min(...pokemonIds);
-          const end = Math.max(...pokemonIds);
+        const pokemonIds = searchResults.map((p: Pokemon) => p.id);
+        const start = Math.min(...pokemonIds);
+        const end = Math.max(...pokemonIds);
 
-          console.log('🎴 Fetching TCG cards in batch for search:', { start, end, count: gen1Pokemon.length });
+        console.log('🎴 Fetching TCG cards in batch for search:', { start, end, count: searchResults.length });
 
-          const tcgCards = await fetchTCGCardsByRange(start, end);
+        const tcgCards = await fetchTCGCardsByRange(start, end);
 
-          // Aplicar os cards aos pokémons
-          for (const pokemon of searchResults) {
-            const tcgCard = tcgCards.get(pokemon.id);
-            if (tcgCard) {
-              (pokemon as any).tcgCard = tcgCard;
-            }
+        // Aplicar os cards aos pokémons
+        for (const pokemon of searchResults) {
+          const tcgCard = tcgCards.get(pokemon.id);
+          if (tcgCard) {
+            (pokemon as any).tcgCard = tcgCard;
           }
         }
       }
@@ -316,8 +313,10 @@ export const usePokemonStore = defineStore('pokemon', () => {
       try {
         tcgMode.value = JSON.parse(saved);
       } catch (e) {
-        tcgMode.value = false;
+        tcgMode.value = false; // Pokedex mode como padrão
       }
+    } else {
+      tcgMode.value = false; // Pokedex mode como padrão se não houver valor salvo
     }
   };
 

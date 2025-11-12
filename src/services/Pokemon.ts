@@ -5,11 +5,11 @@ import { usePokemonStore } from '@/stores/Pokemon';
 export const fetchPokemonsData = async () => {
   try {
     for (let i = 1; i <= 151; i++) {
-      await api.get('/pokemon-species/' + i).then((response) => {
+      await api.get('/pokemon-species/' + i).then((response: any) => {
         usePokemonStore().pokemonEntries.push(response.data);
       });
 
-      await api.get('/pokemon/' + i).then((response) => {
+      await api.get('/pokemon/' + i).then((response: any) => {
         usePokemonStore().pokemonList.push(response.data);
       });
     }
